@@ -163,7 +163,7 @@ void setup(void){
     CCP1CONbits.CCP1M = 0b1100;                 // Modo de PWM
     CCP2CONbits.CCP2M = 0b1100;                 // Modo de PWM para CCP2
         
-    CCPR1L = 0x0f;                              // Duty cicle inicial del PWM en CCP1 y CCP2
+    CCPR1L = 0x0;                               // Duty cicle inicial del PWM en CCP1 y CCP2
     CCPR2L = 0x0f;
     CCP2CONbits.DC2B0 = 0;                      // Bits menos significativos de CCP2
     CCP2CONbits.DC2B1 = 0;

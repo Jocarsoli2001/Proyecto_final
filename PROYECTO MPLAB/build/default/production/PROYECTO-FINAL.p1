@@ -812,8 +812,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;PROYECTO-FINAL.c: 164:     CCP2CONbits.CCP2M = 0b1100;
 [e = . . _CCP2CONbits 0 0 -> -> 12 `i `uc ]
 "166
-[; ;PROYECTO-FINAL.c: 166:     CCPR1L = 0x0f;
-[e = _CCPR1L -> -> 15 `i `uc ]
+[; ;PROYECTO-FINAL.c: 166:     CCPR1L = 0x0;
+[e = _CCPR1L -> -> 0 `i `uc ]
 "167
 [; ;PROYECTO-FINAL.c: 167:     CCPR2L = 0x0f;
 [e = _CCPR2L -> -> 15 `i `uc ]

@@ -2868,7 +2868,7 @@ void setup(void){
     CCP1CONbits.CCP1M = 0b1100;
     CCP2CONbits.CCP2M = 0b1100;
 
-    CCPR1L = 0x0f;
+    CCPR1L = 0x0;
     CCPR2L = 0x0f;
     CCP2CONbits.DC2B0 = 0;
     CCP2CONbits.DC2B1 = 0;
