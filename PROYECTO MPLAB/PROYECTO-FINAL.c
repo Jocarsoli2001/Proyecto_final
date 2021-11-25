@@ -63,7 +63,7 @@ void __interrupt() isr(void){
             
         }
         else if (ADCON0bits.CHS == 0){          // Si input channel = 0 (puerto AN0)
-            CCPR1L = (ADRESH>>1)+124;           // ADRESH = CCPR1L (duty cycle de 131 a 255)
+            CCPR1L = ADRESH>>1;                 // ADRESH = CCPR1L (duty cycle de 131 a 255)
             CCP1CONbits.DC1B1 = ADRESH & 0b01;  
             CCP1CONbits.DC1B0 = (ADRESL>>7);
         } 

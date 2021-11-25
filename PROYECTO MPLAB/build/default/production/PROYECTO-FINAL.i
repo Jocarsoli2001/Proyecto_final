@@ -2768,7 +2768,7 @@ void __attribute__((picinterrupt(("")))) isr(void){
 
         }
         else if (ADCON0bits.CHS == 0){
-            CCPR1L = (ADRESH>>1)+124;
+            CCPR1L = ADRESH>>1;
             CCP1CONbits.DC1B1 = ADRESH & 0b01;
             CCP1CONbits.DC1B0 = (ADRESL>>7);
         }
