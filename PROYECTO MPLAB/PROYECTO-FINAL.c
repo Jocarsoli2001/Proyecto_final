@@ -41,7 +41,11 @@
 
 //-----------------------Variables------------------------------------
 char cont = 0;
+int xf = 135;
+int pos = 0;
 int limite = 0;
+int vel = 0;
+int input = 0;
 
 //------------Funciones sin retorno de variables----------------------
 void setup(void);                               // Función de setup
@@ -63,10 +67,32 @@ void __interrupt() isr(void){
             
         }
         else if (ADCON0bits.CHS == 0){          // Si input channel = 0 (puerto AN0)
-            CCPR1L = (ADRESH>>1)+124;           // ADRESH = CCPR1L (duty cycle de 131 a 255)
-            CCP1CONbits.DC1B1 = ADRESH & 0b01;  
-            CCP1CONbits.DC1B0 = (ADRESL>>7);
-        } 
+            pos = (ADRESH<<1) + 124;
+            
+            //output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
+            //vel2 = 0 + ((2) / (255)) * (vel);
+            if (pos>200){
+                xf = 10 + xf;
+                if(xf>255){
+                    xf = 255;
+                }
+                CCPR1L = pos;
+                CCP1CONbits.DC1B1 = ADRESH & 0b01;  
+                CCP1CONbits.DC1B0 = (ADRESL>>7);
+            }
+            else if(pos<70){
+                xf = -10 + xf;
+                if(xf<0){
+                    xf = 0;
+                }
+                CCPR1L = pos;
+                CCP1CONbits.DC1B1 = ADRESH & 0b01;  
+                CCP1CONbits.DC1B0 = (ADRESL>>7);
+                
+            }
+            //CCPR1L = (ADRESH>>1)+124;           ADRESH = CCPR1L (duty cycle de 131 a 255)
+            
+        }  
         else if (ADCON0bits.CHS == 2){
             limite = ADRESH;
         }
