@@ -2772,28 +2772,34 @@ void __attribute__((picinterrupt(("")))) isr(void){
 
         }
         else if (ADCON0bits.CHS == 0){
-            pos = (ADRESH<<1) + 124;
+            pos = (ADRESH>>1) + 124;
 
 
 
             if (pos>200){
-                xf = 10 + xf;
+                xf = 1 + xf;
                 if(xf>255){
                     xf = 255;
                 }
-                CCPR1L = pos;
+                CCPR1L = xf;
                 CCP1CONbits.DC1B1 = ADRESH & 0b01;
                 CCP1CONbits.DC1B0 = (ADRESL>>7);
             }
             else if(pos<70){
-                xf = -10 + xf;
+                xf = -1 + xf;
                 if(xf<0){
                     xf = 0;
                 }
-                CCPR1L = pos;
+                CCPR1L = xf;
                 CCP1CONbits.DC1B1 = ADRESH & 0b01;
                 CCP1CONbits.DC1B0 = (ADRESL>>7);
 
+            }
+            else if(pos<200 & pos>70){
+                xf = xf;
+                CCPR1L = xf;
+                CCP1CONbits.DC1B1 = ADRESH & 0b01;
+                CCP1CONbits.DC1B0 = (ADRESL>>7);
             }
 
 
