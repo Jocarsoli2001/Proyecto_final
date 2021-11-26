@@ -2745,7 +2745,6 @@ extern int sprintf(char *, const char *, ...);
 extern int printf(const char *, ...);
 # 34 "PROYECTO-FINAL.c" 2
 # 43 "PROYECTO-FINAL.c"
-char cont = 0;
 int LimADC = 0;
 int C1 = 0;
 int C2 = 0;
@@ -2754,9 +2753,7 @@ int C4 = 0;
 
 
 void setup(void);
-void divisor(void);
 void tmr0(void);
-void displays(void);
 
 
 int tabla(int a);
@@ -2765,19 +2762,7 @@ int tabla_p(int a);
 
 void __attribute__((picinterrupt(("")))) isr(void){
     if(PIR1bits.ADIF){
-        if(ADCON0bits.CHS == 1){
-            CCPR2L = (ADRESH>>1)+124;
-            CCP2CONbits.DC2B1 = ADRESH & 0b01;
-            CCP2CONbits.DC2B0 = (ADRESL>>7);
-
-        }
-
-        else if (ADCON0bits.CHS == 0){
-            CCPR1L = (ADRESH>>1)+124;
-            CCP1CONbits.DC1B1 = ADRESH & 0b01;
-            CCP1CONbits.DC1B0 = (ADRESL>>7);
-        }
-        else if (ADCON0bits.CHS == 2){
+        if (ADCON0bits.CHS == 2){
             LimADC = ADRESH;
             if (LimADC > 250){
                 LimADC = 250;
@@ -2788,22 +2773,22 @@ void __attribute__((picinterrupt(("")))) isr(void){
     if(T0IF){
         tmr0();
         if(C1 < 250){
-            PORTCbits.RC0 = 1;
+            PORTBbits.RB0 = 1;
             C1++;
         }
-        else if(C2 <= LimADC){
-            PORTCbits.RC0 = 1;
+        else if(C2 < LimADC){
+            PORTBbits.RB0 = 1;
             C2++;
         }
         else if(C3 < (250-LimADC)){
-            PORTCbits.RC0 = 0;
+            PORTBbits.RB0 = 0;
             C3++;
         }
-        else if(C4 < 4499){
-            PORTCbits.RC0 = 0;
+        else if(C4<4500){
+            PORTBbits.RB0 = 0;
             C4++;
         }
-        else if(C4 > 4499){
+        else if(C4>4499){
             C1 = 0;
             C2 = 0;
             C3 = 0;
@@ -2818,19 +2803,9 @@ void main(void) {
     ADCON0bits.GO = 1;
     while(1){
         if(ADCON0bits.GO == 0){
-            if(ADCON0bits.CHS == 2){
-                ADCON0bits.CHS = 1;
-                _delay((unsigned long)((50)*(8000000/4000000.0)));
-            }
-            else if (ADCON0bits.CHS == 1){
-                ADCON0bits.CHS = 0;
-                _delay((unsigned long)((50)*(8000000/4000000.0)));
-            }
-            else {
+            if(ADCON0bits.CHS == 0){
                 ADCON0bits.CHS = 2;
-                _delay((unsigned long)((50)*(8000000/4000000.0)));
             }
-            _delay((unsigned long)((50)*(8000000/4000000.0)));
             ADCON0bits.GO = 1;
         }
     }
@@ -2844,11 +2819,13 @@ void setup(void){
     ANSELH = 0;
 
     TRISA = 0b00000111;
+    TRISB = 0;
     TRISC = 0;
     TRISD = 0;
     TRISE = 0;
 
     PORTD = 0;
+    PORTB = 0;
     PORTC = 0;
     PORTE = 0;
 
@@ -2884,29 +2861,8 @@ void setup(void){
     INTCONbits.PEIE = 1;
 
 
-    TRISCbits.TRISC2 = 1;
-    TRISCbits.TRISC1 = 1;
-    PR2 = 255;
-    CCP1CONbits.P1M = 0;
-    CCP1CONbits.CCP1M = 0b1100;
-    CCP2CONbits.CCP2M = 0b1100;
-
-    CCPR1L = 0x0f;
-    CCPR2L = 0x0f;
-    CCP2CONbits.DC2B0 = 0;
-    CCP2CONbits.DC2B1 = 0;
-    CCP1CONbits.DC1B = 0;
 
 
-    PIR1bits.TMR2IF = 0;
-    T2CONbits.T2CKPS = 0b11;
-    T2CONbits.TMR2ON = 1;
-
-    while(PIR1bits.TMR2IF == 0);
-    PIR1bits.TMR2IF = 0;
-
-    TRISCbits.TRISC2 = 0;
-    TRISCbits.TRISC1 = 0;
 
     return;
 }
