@@ -48,6 +48,7 @@ void setup(void);                               // Función de setup
 void divisor(void);                             // Función para dividir números en dígitos
 void tmr0(void);                                // Función para reiniciar TMR0
 void displays(void);                            // Función para alternar valores mostrados en displays
+void mapeo(void);
 
 //-------------Funciones que retornan variables-----------------------
 int  tabla(int a);                              // Tabla para traducir valores a displays de 7 segmentos
@@ -75,8 +76,11 @@ void __interrupt() isr(void){
     if(T0IF){
         tmr0();                                 // Reiniciar TMR0
         cont++;                                 // Aumentar contador en cada interrupción de timer 0
-        if(cont >= limite){
-            PORTCbits.RC3 = 0;                  // Si cont >= valor traducido de potenciómetro, entonces RC3 = 0
+        if(cont = 400){
+            cont = 0;
+        }
+        else if(cont = 21){
+            PORTCbits.RC0 = 0;                  // Si cont >= valor traducido de potenciómetro, entonces RC3 = 0
         }
         else {
             PORTCbits.RC3 = 1;                  // PORTC, bit 3 = 1
@@ -108,7 +112,7 @@ void main(void) {
     }
 }
 
-//----------------------Subrutinas--------------------------------
+//----------------------Setup--------------------------------
 void setup(void){
     
     //Configuración de entradas y salidas
@@ -183,8 +187,13 @@ void setup(void){
     return;
 }
 
+//-------------------------Subrutinas (sin retorno)----------------------------------
 void tmr0(void){
     INTCONbits.T0IF = 0;                        // Limpiar bandera de TIMER 0
     TMR0 = valor_tmr0;                          // TMR0 = 255
     return;
+}
+
+void mapeo(void){
+    //output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
 }

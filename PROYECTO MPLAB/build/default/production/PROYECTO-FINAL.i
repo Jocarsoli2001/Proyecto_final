@@ -2753,6 +2753,7 @@ void setup(void);
 void divisor(void);
 void tmr0(void);
 void displays(void);
+void mapeo(void);
 
 
 int tabla(int a);
@@ -2780,8 +2781,11 @@ void __attribute__((picinterrupt(("")))) isr(void){
     if(T0IF){
         tmr0();
         cont++;
-        if(cont >= limite){
-            PORTCbits.RC3 = 0;
+        if(cont = 400){
+            cont = 0;
+        }
+        else if(cont = 21){
+            PORTCbits.RC0 = 0;
         }
         else {
             PORTCbits.RC3 = 1;
@@ -2888,8 +2892,13 @@ void setup(void){
     return;
 }
 
+
 void tmr0(void){
     INTCONbits.T0IF = 0;
     TMR0 = 156;
     return;
+}
+
+void mapeo(void){
+
 }
