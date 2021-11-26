@@ -41,7 +41,7 @@
 
 //-----------------------Variables------------------------------------
 char cont = 0;
-int ADC = 0;
+int LimADC = 0;
 int C1 = 0;
 int C2 = 0;
 int C3 = 0;
@@ -61,7 +61,7 @@ int  tabla_p(int a);                            // Tabla que traduce valores a d
 void __interrupt() isr(void){
     if(PIR1bits.ADIF){
         if(ADCON0bits.CHS == 1){                // Si el channel es 1 (puerto AN1)
-            CCPR2L = (ADRESH>>1)+118;           // ADRESH = CCPR2L (duty cycle de 118 a 255)
+            CCPR2L = (ADRESH>>1)+124;           // ADRESH = CCPR2L (duty cycle de 118 a 255)
             CCP2CONbits.DC2B1 = ADRESH & 0b01;  
             CCP2CONbits.DC2B0 = (ADRESL>>7);
             
@@ -73,7 +73,10 @@ void __interrupt() isr(void){
             CCP1CONbits.DC1B0 = (ADRESL>>7);
         } 
         else if (ADCON0bits.CHS == 2){
-            ADC = ADRESH;
+            LimADC = ADRESH;
+            if (LimADC > 250){
+                LimADC = 250;
+            }
         }
         PIR1bits.ADIF = 0;                      // Limpiar bander de interrupción ADC
     }
@@ -83,16 +86,23 @@ void __interrupt() isr(void){
             PORTCbits.RC0 = 1;                  // Generar una onda cuadrada de 1 milisegundos
             C1++;                               // Aumentar el contador 1
         }
-        else if(C2 <= ADC){
+        else if(C2 <= LimADC){
             PORTCbits.RC0 = 1;                  // Si cont es menor o igual al valor traducido de potenciómetro, entonces RC0 = 1
             C2++;
         }
-        else if(C3 < (250-ADC)){
+        else if(C3 < (250-LimADC)){
             PORTCbits.RC0 = 0;                  // PORTC, bit 0 = 0 luego de generar pulsos de 2 ms
             C3++;
         }
         else if(C4 < 4499){
             PORTCbits.RC0 = 0;
+            C4++;
+        }
+        else if(C4 > 4499){
+            C1 = 0;
+            C2 = 0;
+            C3 = 0;
+            C4 = 0;
         }
     }
 }

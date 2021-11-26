@@ -2746,7 +2746,7 @@ extern int printf(const char *, ...);
 # 34 "PROYECTO-FINAL.c" 2
 # 43 "PROYECTO-FINAL.c"
 char cont = 0;
-int ADC = 0;
+int LimADC = 0;
 int C1 = 0;
 int C2 = 0;
 int C3 = 0;
@@ -2766,7 +2766,7 @@ int tabla_p(int a);
 void __attribute__((picinterrupt(("")))) isr(void){
     if(PIR1bits.ADIF){
         if(ADCON0bits.CHS == 1){
-            CCPR2L = (ADRESH>>1)+118;
+            CCPR2L = (ADRESH>>1)+124;
             CCP2CONbits.DC2B1 = ADRESH & 0b01;
             CCP2CONbits.DC2B0 = (ADRESL>>7);
 
@@ -2778,7 +2778,10 @@ void __attribute__((picinterrupt(("")))) isr(void){
             CCP1CONbits.DC1B0 = (ADRESL>>7);
         }
         else if (ADCON0bits.CHS == 2){
-            ADC = ADRESH;
+            LimADC = ADRESH;
+            if (LimADC > 250){
+                LimADC = 250;
+            }
         }
         PIR1bits.ADIF = 0;
     }
@@ -2788,16 +2791,23 @@ void __attribute__((picinterrupt(("")))) isr(void){
             PORTCbits.RC0 = 1;
             C1++;
         }
-        else if(C2 <= ADC){
+        else if(C2 <= LimADC){
             PORTCbits.RC0 = 1;
             C2++;
         }
-        else if(C3 < (250-ADC)){
+        else if(C3 < (250-LimADC)){
             PORTCbits.RC0 = 0;
             C3++;
         }
         else if(C4 < 4499){
             PORTCbits.RC0 = 0;
+            C4++;
+        }
+        else if(C4 > 4499){
+            C1 = 0;
+            C2 = 0;
+            C3 = 0;
+            C4 = 0;
         }
     }
 }
