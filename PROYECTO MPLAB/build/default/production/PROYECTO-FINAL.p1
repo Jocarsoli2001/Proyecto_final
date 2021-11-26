@@ -580,12 +580,12 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;PROYECTO-FINAL.c: 77:         cont++;
 [e ++ _cont -> -> 1 `i `uc ]
 "78
-[; ;PROYECTO-FINAL.c: 78:         if(cont >= limite){
-[e $ ! >= -> _cont `i _limite 147  ]
+[; ;PROYECTO-FINAL.c: 78:         if(cont == 2){
+[e $ ! == -> _cont `i -> 2 `i 147  ]
 {
 "79
-[; ;PROYECTO-FINAL.c: 79:             PORTCbits.RC3 = 0;
-[e = . . _PORTCbits 0 3 -> -> 0 `i `uc ]
+[; ;PROYECTO-FINAL.c: 79:             PORTCbits.RC3 = 1;
+[e = . . _PORTCbits 0 3 -> -> 1 `i `uc ]
 "80
 [; ;PROYECTO-FINAL.c: 80:         }
 }
@@ -595,8 +595,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U 147 ]
 {
 "82
-[; ;PROYECTO-FINAL.c: 82:             PORTCbits.RC3 = 1;
-[e = . . _PORTCbits 0 3 -> -> 1 `i `uc ]
+[; ;PROYECTO-FINAL.c: 82:             PORTCbits.RC3 = 0;
+[e = . . _PORTCbits 0 3 -> -> 0 `i `uc ]
 "83
 [; ;PROYECTO-FINAL.c: 83:         }
 }
@@ -740,20 +740,20 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;PROYECTO-FINAL.c: 133:     OPTION_REGbits.T0SE = 0;
 [e = . . _OPTION_REGbits 0 2 -> -> 0 `i `uc ]
 "134
-[; ;PROYECTO-FINAL.c: 134:     OPTION_REGbits.PSA = 1;
-[e = . . _OPTION_REGbits 0 1 -> -> 1 `i `uc ]
+[; ;PROYECTO-FINAL.c: 134:     OPTION_REGbits.PSA = 0;
+[e = . . _OPTION_REGbits 0 1 -> -> 0 `i `uc ]
 "135
-[; ;PROYECTO-FINAL.c: 135:     OPTION_REGbits.PS2 = 0;
-[e = . . _OPTION_REGbits 1 2 -> -> 0 `i `uc ]
+[; ;PROYECTO-FINAL.c: 135:     OPTION_REGbits.PS2 = 1;
+[e = . . _OPTION_REGbits 1 2 -> -> 1 `i `uc ]
 "136
-[; ;PROYECTO-FINAL.c: 136:     OPTION_REGbits.PS1 = 0;
-[e = . . _OPTION_REGbits 1 1 -> -> 0 `i `uc ]
+[; ;PROYECTO-FINAL.c: 136:     OPTION_REGbits.PS1 = 1;
+[e = . . _OPTION_REGbits 1 1 -> -> 1 `i `uc ]
 "137
 [; ;PROYECTO-FINAL.c: 137:     OPTION_REGbits.PS0 = 0;
 [e = . . _OPTION_REGbits 1 0 -> -> 0 `i `uc ]
 "138
-[; ;PROYECTO-FINAL.c: 138:     TMR0 = 156;
-[e = _TMR0 -> -> 156 `i `uc ]
+[; ;PROYECTO-FINAL.c: 138:     TMR0 = 240;
+[e = _TMR0 -> -> 240 `i `uc ]
 "141
 [; ;PROYECTO-FINAL.c: 141:     ADCON1bits.ADFM = 0;
 [e = . . _ADCON1bits 0 4 -> -> 0 `i `uc ]
@@ -858,22 +858,22 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;PROYECTO-FINAL.c: 184: }
 [e :UE 158 ]
 }
-"186
-[; ;PROYECTO-FINAL.c: 186: void tmr0(void){
+"187
+[; ;PROYECTO-FINAL.c: 187: void tmr0(void){
 [v _tmr0 `(v ~T0 @X0 1 ef ]
 {
 [e :U _tmr0 ]
 [f ]
-"187
-[; ;PROYECTO-FINAL.c: 187:     INTCONbits.T0IF = 0;
-[e = . . _INTCONbits 0 2 -> -> 0 `i `uc ]
 "188
-[; ;PROYECTO-FINAL.c: 188:     TMR0 = 156;
-[e = _TMR0 -> -> 156 `i `uc ]
+[; ;PROYECTO-FINAL.c: 188:     INTCONbits.T0IF = 0;
+[e = . . _INTCONbits 0 2 -> -> 0 `i `uc ]
 "189
-[; ;PROYECTO-FINAL.c: 189:     return;
-[e $UE 162  ]
+[; ;PROYECTO-FINAL.c: 189:     TMR0 = 240;
+[e = _TMR0 -> -> 240 `i `uc ]
 "190
-[; ;PROYECTO-FINAL.c: 190: }
+[; ;PROYECTO-FINAL.c: 190:     return;
+[e $UE 162  ]
+"191
+[; ;PROYECTO-FINAL.c: 191: }
 [e :UE 162 ]
 }

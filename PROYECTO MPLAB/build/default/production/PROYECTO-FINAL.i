@@ -2780,11 +2780,11 @@ void __attribute__((picinterrupt(("")))) isr(void){
     if(T0IF){
         tmr0();
         cont++;
-        if(cont >= limite){
-            PORTCbits.RC3 = 0;
+        if(cont == 2){
+            PORTCbits.RC3 = 1;
         }
         else {
-            PORTCbits.RC3 = 1;
+            PORTCbits.RC3 = 0;
         }
     }
 }
@@ -2836,11 +2836,11 @@ void setup(void){
 
     OPTION_REGbits.T0CS = 0;
     OPTION_REGbits.T0SE = 0;
-    OPTION_REGbits.PSA = 1;
-    OPTION_REGbits.PS2 = 0;
-    OPTION_REGbits.PS1 = 0;
+    OPTION_REGbits.PSA = 0;
+    OPTION_REGbits.PS2 = 1;
+    OPTION_REGbits.PS1 = 1;
     OPTION_REGbits.PS0 = 0;
-    TMR0 = 156;
+    TMR0 = 240;
 
 
     ADCON1bits.ADFM = 0;
@@ -2888,8 +2888,9 @@ void setup(void){
     return;
 }
 
+
 void tmr0(void){
     INTCONbits.T0IF = 0;
-    TMR0 = 156;
+    TMR0 = 240;
     return;
 }

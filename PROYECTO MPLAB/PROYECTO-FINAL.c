@@ -37,7 +37,7 @@
 #define _XTAL_FREQ 8000000
 
 //-----------------------Constantes----------------------------------
-#define  valor_tmr0 156                        // valor_tmr0 = 156 (0.05 ms)
+#define  valor_tmr0 240                         // valor_tmr0 = 156 (0.05 ms)
 
 //-----------------------Variables------------------------------------
 char cont = 0;
@@ -75,11 +75,11 @@ void __interrupt() isr(void){
     if(T0IF){
         tmr0();                                 // Reiniciar TMR0
         cont++;                                 // Aumentar contador en cada interrupción de timer 0
-        if(cont >= limite){
-            PORTCbits.RC3 = 0;                  // Si cont >= valor traducido de potenciómetro, entonces RC3 = 0
+        if(cont == 2){
+            PORTCbits.RC3 = 1;                  // Si cont >= valor traducido de potenciómetro, entonces RC3 = 0
         }
         else {
-            PORTCbits.RC3 = 1;                  // PORTC, bit 3 = 1
+            PORTCbits.RC3 = 0;                  // PORTC, bit 3 = 1
         }
     }
 }
@@ -131,9 +131,9 @@ void setup(void){
     //Configuración de TMR0
     OPTION_REGbits.T0CS = 0;                    // bit 5  TMR0 Clock Source Select bit...0 = Internal Clock (CLKO) 1 = Transition on T0CKI pin
     OPTION_REGbits.T0SE = 0;                    // bit 4 TMR0 Source Edge Select bit 0 = low/high 1 = high/low
-    OPTION_REGbits.PSA = 1;                     // bit 3  Prescaler Assignment bit...0 = Prescaler is assigned to the WDT
-    OPTION_REGbits.PS2 = 0;                     // bits 2-0  PS2:PS0: Prescaler Rate Select bits
-    OPTION_REGbits.PS1 = 0;
+    OPTION_REGbits.PSA = 0;                     // bit 3  Prescaler Assignment bit...0 = Prescaler is assigned to the WDT
+    OPTION_REGbits.PS2 = 1;                     // bits 2-0  PS2:PS0: Prescaler Rate Select bits
+    OPTION_REGbits.PS1 = 1;
     OPTION_REGbits.PS0 = 0;
     TMR0 = valor_tmr0;                          // preset for timer register
     
@@ -183,8 +183,10 @@ void setup(void){
     return;
 }
 
+//----------------------------Subrutinas----------------------------------------
 void tmr0(void){
     INTCONbits.T0IF = 0;                        // Limpiar bandera de TIMER 0
     TMR0 = valor_tmr0;                          // TMR0 = 255
     return;
 }
+

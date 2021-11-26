@@ -11,16 +11,16 @@
 # All addresses and the length are given in unqualified hexadecimal
 # in delta units.  Any other numeric values are decimal.
 %PSECTS
-$C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
+$C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
 reset_vec CODE 0 0 0 3 2
 end_init CODE 0 C C 3 2
 config CONFIG 4 2007 2007 2 2
 $dist/default/production\PROYECTO_MPLAB.production.o
 cinit CODE 0 F F 7 2
-text1 CODE 0 AF AF 62 2
-text2 CODE 0 16 16 99 2
-text3 CODE 0 14B 14B 6 2
-maintext CODE 0 111 111 3A 2
+text1 CODE 0 AA AA 62 2
+text2 CODE 0 16 16 94 2
+text3 CODE 0 146 146 6 2
+maintext CODE 0 10C 10C 3A 2
 cstackCOMMON COMMON 1 70 70 6 1
 intentry CODE 0 4 4 8 2
 bssCOMMON COMMON 1 76 76 3 1
@@ -40,13 +40,13 @@ BANK1 A0-EF 1
 BANK2 110-16F 1
 BANK3 190-1EF 1
 CONST 3-3 2
-CONST 151-1FFF 2
+CONST 14C-1FFF 2
 ENTRY 3-3 2
-ENTRY 151-1FFF 2
+ENTRY 14C-1FFF 2
 IDLOC 2000-2003 2
 STACK 110-16F 1
 CODE 3-3 2
-CODE 151-1FFF 2
+CODE 14C-1FFF 2
 SFR0 0-1F 1
 SFR1 80-9F 1
 SFR2 100-10F 1
@@ -54,9 +54,9 @@ SFR3 180-18F 1
 COMMON 79-7D 1
 EEDATA 2100-21FF 2
 STRCODE 3-3 2
-STRCODE 151-1FFF 2
+STRCODE 14C-1FFF 2
 STRING 3-3 2
-STRING 151-1FFF 2
+STRING 14C-1FFF 2
 # %LINETAB Section
 # This section enumerates the file/line to address mappings.
 # The beginning of the section is indicated by %LINETAB.
@@ -71,19 +71,19 @@ STRING 151-1FFF 2
 # All other numeric values are in decimal.
 %LINETAB
 $dist/default/production\PROYECTO_MPLAB.production.o
-F cinit CODE >487:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
-F cinit CODE >490:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
-F cinit CODE >504:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
-10 cinit CODE >505:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
-11 cinit CODE >506:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
-12 cinit CODE >512:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
-12 cinit CODE >514:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
-13 cinit CODE >515:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
+F cinit CODE >487:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
+F cinit CODE >490:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
+F cinit CODE >504:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
+10 cinit CODE >505:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
+11 cinit CODE >506:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
+12 cinit CODE >512:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
+12 cinit CODE >514:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
+13 cinit CODE >515:C:\Users\jocar\AppData\Local\Temp\xcAsesc.s
 4 intentry CODE >57:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-14B text3 CODE >186:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-14B text3 CODE >187:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-14C text3 CODE >188:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-150 text3 CODE >190:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+146 text3 CODE >187:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+146 text3 CODE >188:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+147 text3 CODE >189:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+14B text3 CODE >191:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 16 text2 CODE >57:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 16 text2 CODE >58:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 1C text2 CODE >59:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
@@ -112,79 +112,77 @@ F cinit CODE >504:C:\Users\jocar\AppData\Local\Temp\xcAsgg0.s
 8D text2 CODE >76:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 92 text2 CODE >77:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 96 text2 CODE >78:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-99 text2 CODE >78:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-9D text2 CODE >78:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-A1 text2 CODE >79:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-A4 text2 CODE >80:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-A5 text2 CODE >81:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-A5 text2 CODE >82:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-A8 text2 CODE >85:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-AF text1 CODE >112:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-AF text1 CODE >115:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-B3 text1 CODE >116:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-B4 text1 CODE >118:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-B8 text1 CODE >119:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-B9 text1 CODE >120:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-BA text1 CODE >121:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-BB text1 CODE >123:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-BE text1 CODE >124:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-BF text1 CODE >125:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-C0 text1 CODE >128:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-C4 text1 CODE >129:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-C5 text1 CODE >132:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-C6 text1 CODE >133:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-C7 text1 CODE >134:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-C8 text1 CODE >135:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-C9 text1 CODE >136:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-CA text1 CODE >137:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-CB text1 CODE >138:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-CF text1 CODE >141:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-D2 text1 CODE >142:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-D3 text1 CODE >143:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-D4 text1 CODE >145:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-DA text1 CODE >146:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-DC text1 CODE >147:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-DD text1 CODE >148:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-E1 text1 CODE >151:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-E2 text1 CODE >152:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-E3 text1 CODE >153:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-E4 text1 CODE >154:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-E7 text1 CODE >155:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-EA text1 CODE >156:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-EB text1 CODE >159:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-EC text1 CODE >160:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-ED text1 CODE >161:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-EF text1 CODE >162:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-F3 text1 CODE >163:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-F7 text1 CODE >164:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-FB text1 CODE >166:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-FD text1 CODE >167:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-FF text1 CODE >168:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-100 text1 CODE >169:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-101 text1 CODE >170:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-103 text1 CODE >173:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-104 text1 CODE >174:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-106 text1 CODE >175:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-107 text1 CODE >177:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-10B text1 CODE >178:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-10C text1 CODE >180:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-10F text1 CODE >181:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-110 text1 CODE >184:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-111 maintext CODE >88:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-111 maintext CODE >89:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-116 maintext CODE >90:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-119 maintext CODE >92:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+9C text2 CODE >79:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+9F text2 CODE >80:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+A0 text2 CODE >81:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+A0 text2 CODE >82:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+A3 text2 CODE >85:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+AA text1 CODE >112:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+AA text1 CODE >115:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+AE text1 CODE >116:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+AF text1 CODE >118:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+B3 text1 CODE >119:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+B4 text1 CODE >120:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+B5 text1 CODE >121:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+B6 text1 CODE >123:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+B9 text1 CODE >124:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+BA text1 CODE >125:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+BB text1 CODE >128:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+BF text1 CODE >129:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+C0 text1 CODE >132:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+C1 text1 CODE >133:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+C2 text1 CODE >134:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+C3 text1 CODE >135:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+C4 text1 CODE >136:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+C5 text1 CODE >137:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+C6 text1 CODE >138:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+CA text1 CODE >141:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+CD text1 CODE >142:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+CE text1 CODE >143:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+CF text1 CODE >145:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+D5 text1 CODE >146:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+D7 text1 CODE >147:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+D8 text1 CODE >148:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+DC text1 CODE >151:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+DD text1 CODE >152:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+DE text1 CODE >153:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+DF text1 CODE >154:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+E2 text1 CODE >155:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+E5 text1 CODE >156:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+E6 text1 CODE >159:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+E7 text1 CODE >160:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+E8 text1 CODE >161:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+EA text1 CODE >162:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+EE text1 CODE >163:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+F2 text1 CODE >164:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+F6 text1 CODE >166:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+F8 text1 CODE >167:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+FA text1 CODE >168:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+FB text1 CODE >169:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+FC text1 CODE >170:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+FE text1 CODE >173:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+FF text1 CODE >174:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+101 text1 CODE >175:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+102 text1 CODE >177:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+106 text1 CODE >178:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+107 text1 CODE >180:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+10A text1 CODE >181:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+10B text1 CODE >184:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+10C maintext CODE >88:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+10C maintext CODE >89:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+111 maintext CODE >90:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+114 maintext CODE >92:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+118 maintext CODE >93:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 11D maintext CODE >93:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-122 maintext CODE >93:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-126 maintext CODE >94:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-12A maintext CODE >95:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-12E maintext CODE >96:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+121 maintext CODE >94:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+125 maintext CODE >95:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+129 maintext CODE >96:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+12A maintext CODE >97:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 12F maintext CODE >97:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-134 maintext CODE >97:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-138 maintext CODE >98:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-13B maintext CODE >102:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-140 maintext CODE >105:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-144 maintext CODE >106:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+133 maintext CODE >98:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+136 maintext CODE >102:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+13B maintext CODE >105:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+13F maintext CODE >106:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -198,7 +196,7 @@ FF text1 CODE >168:D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo
 # is the name of the object file in which the symbol was defined.
 %SYMTAB
 ___latbits 2 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-__Hspace_0 151 0 ABS 0 - -
+__Hspace_0 14C 0 ABS 0 - -
 __Hspace_1 79 0 ABS 0 - -
 __Hspace_2 0 0 ABS 0 - -
 __Hspace_3 0 0 ABS 0 - -
@@ -207,23 +205,23 @@ __Heeprom_data 0 0 EEDATA 3 eeprom_data -
 __Hstrings 0 0 ABS 0 strings -
 _T0IF 5A 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _TMR0 1 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-___sp 0 0 STACK 2 stack C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
+___sp 0 0 STACK 2 stack C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
 _cont 78 0 COMMON 1 bssCOMMON dist/default/production\PROYECTO_MPLAB.production.o
-_main 222 0 CODE 0 maintext dist/default/production\PROYECTO_MPLAB.production.o
-_tmr0 296 0 CODE 0 text3 dist/default/production\PROYECTO_MPLAB.production.o
+_main 218 0 CODE 0 maintext dist/default/production\PROYECTO_MPLAB.production.o
+_tmr0 28C 0 CODE 0 text3 dist/default/production\PROYECTO_MPLAB.production.o
 btemp 7E 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-start 18 0 CODE 0 init C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
+start 18 0 CODE 0 init C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
 __size_of_main 0 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 __size_of_tmr0 0 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 __HbssCOMMON 0 0 ABS 0 bssCOMMON -
 _OPTION_REGbits 81 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 __Hpowerup 0 0 CODE 0 powerup -
-intlevel0 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
-intlevel1 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
-intlevel2 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
-intlevel3 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
-intlevel4 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
-intlevel5 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
+intlevel0 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
+intlevel1 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
+intlevel2 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
+intlevel3 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
+intlevel4 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
+intlevel5 0 0 ENTRY 0 functab C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
 __LbssCOMMON 0 0 ABS 0 bssCOMMON -
 _OSCCONbits 8F 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 wtemp0 7E 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
@@ -235,12 +233,12 @@ _ANSELH 189 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _CCPR1L 15 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _CCPR2L 1B 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 __Lmaintext 0 0 ABS 0 maintext -
-___stackhi 0 0 ABS 0 - C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
-___stacklo 0 0 ABS 0 - C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
+___stackhi 0 0 ABS 0 - C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
+___stacklo 0 0 ABS 0 - C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
 __size_of_setup 0 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 start_initialization 1E 0 CODE 0 cinit dist/default/production\PROYECTO_MPLAB.production.o
 _TRISCbits 87 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-___int_sp 0 0 STACK 2 stack C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
+___int_sp 0 0 STACK 2 stack C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
 __Hbank0 0 0 ABS 0 bank0 -
 __Hbank1 0 0 ABS 0 bank1 -
 __Hbank2 0 0 ABS 0 bank2 -
@@ -276,18 +274,18 @@ __Lsfr3 0 0 ABS 0 sfr3 -
 __Ltext 0 0 ABS 0 text -
 __HcstackCOMMON 0 0 ABS 0 cstackCOMMON -
 _PR2 92 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-__S0 151 0 ABS 0 - -
+__S0 14C 0 ABS 0 - -
 __S1 79 0 ABS 0 - -
 __S2 0 0 ABS 0 - -
 __S3 0 0 ABS 0 - -
 _isr 2C 0 CODE 0 text2 dist/default/production\PROYECTO_MPLAB.production.o
 saved_w 7E 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-__end_of_isr 15E 0 CODE 0 text2 dist/default/production\PROYECTO_MPLAB.production.o
+__end_of_isr 154 0 CODE 0 text2 dist/default/production\PROYECTO_MPLAB.production.o
 __Lintentry 8 0 CODE 0 intentry -
-reset_vec 0 0 CODE 0 reset_vec C:\Users\jocar\AppData\Local\Temp\xcAsgg0.o
+reset_vec 0 0 CODE 0 reset_vec C:\Users\jocar\AppData\Local\Temp\xcAsesc.o
 _limite 76 0 COMMON 1 bssCOMMON dist/default/production\PROYECTO_MPLAB.production.o
 _PIE1bits 8C 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-__pmaintext 222 0 CODE 0 maintext dist/default/production\PROYECTO_MPLAB.production.o
+__pmaintext 218 0 CODE 0 maintext dist/default/production\PROYECTO_MPLAB.production.o
 __Lcommon 0 0 ABS 0 common -
 __Lconfig 0 0 CONFIG 4 config -
 _ADCON0bits 1F 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
@@ -305,9 +303,9 @@ end_of_initialization 24 0 CODE 0 cinit dist/default/production\PROYECTO_MPLAB.p
 __Hintentry 18 0 CODE 0 intentry -
 __Lstrings 0 0 ABS 0 strings -
 __Hreset_vec 6 0 CODE 0 reset_vec -
-__ptext1 15E 0 CODE 0 text1 dist/default/production\PROYECTO_MPLAB.production.o
+__ptext1 154 0 CODE 0 text1 dist/default/production\PROYECTO_MPLAB.production.o
 __ptext2 2C 0 CODE 0 text2 dist/default/production\PROYECTO_MPLAB.production.o
-__ptext3 296 0 CODE 0 text3 dist/default/production\PROYECTO_MPLAB.production.o
+__ptext3 28C 0 CODE 0 text3 dist/default/production\PROYECTO_MPLAB.production.o
 __Lpowerup 0 0 CODE 0 powerup -
 __Leeprom_data 0 0 EEDATA 3 eeprom_data -
 __Lreset_vec 0 0 CODE 0 reset_vec -
@@ -316,8 +314,8 @@ __Lfunctab 0 0 ENTRY 0 functab -
 __Lclrtext 0 0 ABS 0 clrtext -
 __pcstackCOMMON 70 0 COMMON 1 cstackCOMMON dist/default/production\PROYECTO_MPLAB.production.o
 __Hend_init 1E 0 CODE 0 end_init -
-__end_of_main 296 0 CODE 0 maintext dist/default/production\PROYECTO_MPLAB.production.o
-__end_of_tmr0 2A2 0 CODE 0 text3 dist/default/production\PROYECTO_MPLAB.production.o
+__end_of_main 28C 0 CODE 0 maintext dist/default/production\PROYECTO_MPLAB.production.o
+__end_of_tmr0 298 0 CODE 0 text3 dist/default/production\PROYECTO_MPLAB.production.o
 _CCP2CONbits 1D 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _ANSEL 188 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _PORTC 7 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
@@ -327,11 +325,11 @@ _TRISA 85 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _TRISC 87 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _TRISD 88 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 _TRISE 89 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
-__end_of_setup 222 0 CODE 0 text1 dist/default/production\PROYECTO_MPLAB.production.o
+__end_of_setup 218 0 CODE 0 text1 dist/default/production\PROYECTO_MPLAB.production.o
 __Hram 0 0 ABS 0 ram -
 __Lram 0 0 ABS 0 ram -
 interrupt_function 8 0 CODE 0 intentry dist/default/production\PROYECTO_MPLAB.production.o
-_setup 15E 0 CODE 0 text1 dist/default/production\PROYECTO_MPLAB.production.o
+_setup 154 0 CODE 0 text1 dist/default/production\PROYECTO_MPLAB.production.o
 __pintentry 8 0 CODE 0 intentry dist/default/production\PROYECTO_MPLAB.production.o
 __size_of_isr 0 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 __initialization 1E 0 CODE 0 cinit dist/default/production\PROYECTO_MPLAB.production.o
@@ -363,7 +361,7 @@ _CCP1CONbits 17 0 ABS 0 - dist/default/production\PROYECTO_MPLAB.production.o
 # All other numeric quantities are in decimal.
 %SEGMENTS
 cstackCOMMON 1 70 70 9 1
-intentry 0 4 8 14D 2
+intentry 0 4 8 148 2
 reset_vec 0 0 0 3 2
 # %NOTES Section
 # This section contains data of all the note-psects.  The beginning of the section
