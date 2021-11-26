@@ -58,38 +58,11 @@ int  tabla_p(int a);                            // Tabla que traduce valores a d
 void __interrupt() isr(void){
     if(PIR1bits.ADIF){
         if (ADCON0bits.CHS == 2){
-            LimADC = ADRESH;
-            if (LimADC > 250){
-                LimADC = 250;
-            }
+            PORTC = ADRESH;
         }
         PIR1bits.ADIF = 0;                      // Limpiar bander de interrupción ADC
     }
-    if(T0IF){
-        tmr0();                                 // Reiniciar TMR0
-        if(C1 < 250){
-            PORTBbits.RB0 = 1;                  // Generar una onda cuadrada de 1 milisegundos
-            C1++;                               // Aumentar el contador 1
-        }
-        else if(C2 < LimADC){
-            PORTBbits.RB0 = 1;                  // Si cont es menor o igual al valor traducido de potenciómetro, entonces RC0 = 1
-            C2++;
-        }
-        else if(C3 < (250-LimADC)){
-            PORTBbits.RB0 = 0;                  // PORTC, bit 0 = 0 luego de generar pulsos de 2 ms
-            C3++;
-        }
-        else if(C4<4500){
-            PORTBbits.RB0 = 0;
-            C4++;
-        }
-        else if(C4>4499){
-            C1 = 0;
-            C2 = 0;
-            C3 = 0;
-            C4 = 0;
-        }
-    }
+    
 }
 
 //----------------------Main Loop--------------------------------

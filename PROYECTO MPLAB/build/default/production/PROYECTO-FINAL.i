@@ -2763,38 +2763,11 @@ int tabla_p(int a);
 void __attribute__((picinterrupt(("")))) isr(void){
     if(PIR1bits.ADIF){
         if (ADCON0bits.CHS == 2){
-            LimADC = ADRESH;
-            if (LimADC > 250){
-                LimADC = 250;
-            }
+            PORTC = ADRESH;
         }
         PIR1bits.ADIF = 0;
     }
-    if(T0IF){
-        tmr0();
-        if(C1 < 250){
-            PORTBbits.RB0 = 1;
-            C1++;
-        }
-        else if(C2 < LimADC){
-            PORTBbits.RB0 = 1;
-            C2++;
-        }
-        else if(C3 < (250-LimADC)){
-            PORTBbits.RB0 = 0;
-            C3++;
-        }
-        else if(C4<4500){
-            PORTBbits.RB0 = 0;
-            C4++;
-        }
-        else if(C4>4499){
-            C1 = 0;
-            C2 = 0;
-            C3 = 0;
-            C4 = 0;
-        }
-    }
+
 }
 
 
