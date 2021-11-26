@@ -37,11 +37,15 @@
 #define _XTAL_FREQ 8000000
 
 //-----------------------Constantes----------------------------------
-#define  valor_tmr0 156                        // valor_tmr0 = 156 (0.05 ms)
+#define  valor_tmr0 248                         // valor_tmr0 = 248 (4 us)
 
 //-----------------------Variables------------------------------------
 char cont = 0;
-int limite = 0;
+int ADC = 0;
+int C1 = 0;
+int C2 = 0;
+int C3 = 0;
+int C4 = 0;
 
 //------------Funciones sin retorno de variables----------------------
 void setup(void);                               // Función de setup
@@ -63,13 +67,14 @@ void __interrupt() isr(void){
             CCP2CONbits.DC2B0 = (ADRESL>>7);
             
         }
+        // CCP1 = control para abrir y cerrar garra
         else if (ADCON0bits.CHS == 0){          // Si input channel = 0 (puerto AN0)
-            CCPR1L = (ADRESH>>1)+124;                 // ADRESH = CCPR1L (duty cycle de 131 a 255)
+            CCPR1L = (ADRESH>>1)+124;           // ADRESH = CCPR1L (duty cycle de 124 a 255)
             CCP1CONbits.DC1B1 = ADRESH & 0b01;  
             CCP1CONbits.DC1B0 = (ADRESL>>7);
         } 
         else if (ADCON0bits.CHS == 2){
-            limite = ADRESH;
+            ADC = ADRESH;
         }
         PIR1bits.ADIF = 0;                      // Limpiar bander de interrupción ADC
     }

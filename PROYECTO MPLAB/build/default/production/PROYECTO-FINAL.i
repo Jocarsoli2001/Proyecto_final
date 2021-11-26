@@ -2746,7 +2746,11 @@ extern int printf(const char *, ...);
 # 34 "PROYECTO-FINAL.c" 2
 # 43 "PROYECTO-FINAL.c"
 char cont = 0;
-int limite = 0;
+int ADC = 0;
+int C1 = 0;
+int C2 = 0;
+int C3 = 0;
+int C4 = 0;
 
 
 void setup(void);
@@ -2768,13 +2772,14 @@ void __attribute__((picinterrupt(("")))) isr(void){
             CCP2CONbits.DC2B0 = (ADRESL>>7);
 
         }
+
         else if (ADCON0bits.CHS == 0){
             CCPR1L = (ADRESH>>1)+124;
             CCP1CONbits.DC1B1 = ADRESH & 0b01;
             CCP1CONbits.DC1B0 = (ADRESL>>7);
         }
         else if (ADCON0bits.CHS == 2){
-            limite = ADRESH;
+            ADC = ADRESH;
         }
         PIR1bits.ADIF = 0;
     }
@@ -2844,7 +2849,7 @@ void setup(void){
     OPTION_REGbits.PS2 = 0;
     OPTION_REGbits.PS1 = 0;
     OPTION_REGbits.PS0 = 0;
-    TMR0 = 156;
+    TMR0 = 248;
 
 
     ADCON1bits.ADFM = 0;
@@ -2895,7 +2900,7 @@ void setup(void){
 
 void tmr0(void){
     INTCONbits.T0IF = 0;
-    TMR0 = 156;
+    TMR0 = 248;
     return;
 }
 
