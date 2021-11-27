@@ -11,13 +11,13 @@
 [v ___eecpymem __eecpymem `(v  1 e 1 0 ]
 "39
 [v ___memcpyee __memcpyee `(v  1 e 1 0 ]
-"57 D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
+"60 D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 [v _isr isr `II(v  1 e 1 0 ]
-"88
+"92
 [v _main main `(v  1 e 1 0 ]
-"112
+"117
 [v _setup setup `(v  1 e 1 0 ]
-"187
+"192
 [v _tmr0 tmr0 `(v  1 e 1 0 ]
 "59 C:/Program Files/Microchip/MPLABX/v5.50/packs/Microchip/PIC16Fxxx_DFP/1.2.33/xc8\pic\include\proc\pic16f887.h
 [v _TMR0 TMR0 `VEuc  1 e 1 @1 ]
@@ -223,27 +223,27 @@
 [v _ANSELH ANSELH `VEuc  1 e 1 @393 ]
 "4322
 [v _T0IF T0IF `VEb  1 e 0 @90 ]
-"43 D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
-[v _cont cont `uc  1 e 1 0 ]
-"44
+"44 D:\Archivos\Documentos\Universidad y colegio\UVG\2021\Segundo Semestre\Programación de Microcontroladores\Proyecto-final\PROYECTO MPLAB\PROYECTO-FINAL.c
 [v _limite limite `i  1 e 2 0 ]
-"88
+"45
+[v _valor_tmr0 valor_tmr0 `i  1 e 2 0 ]
+"92
 [v _main main `(v  1 e 1 0 ]
 {
-"109
+"114
 } 0
-"112
+"117
 [v _setup setup `(v  1 e 1 0 ]
 {
-"184
+"189
 } 0
-"57
+"60
 [v _isr isr `II(v  1 e 1 0 ]
 {
-"85
+"89
 } 0
-"187
+"192
 [v _tmr0 tmr0 `(v  1 e 1 0 ]
 {
-"191
+"196
 } 0

@@ -34,14 +34,17 @@
 #include <stdio.h>
 
 //-----------------Definición de frecuencia de cristal---------------
-#define _XTAL_FREQ 8000000
+#define _XTAL_FREQ 4000000
 
 //-----------------------Constantes----------------------------------
-#define  valor_tmr0 240                         // valor_tmr0 = 156 (0.05 ms)
+//#define  valor_tmr0 248                         // valor_tmr0 = 156 (0.05 ms)
 
 //-----------------------Variables------------------------------------
 char cont = 0;
 int limite = 0;
+int valor_tmr0 = 0;
+//limite mínimo = 14
+//Límite máximo = 32
 
 //------------Funciones sin retorno de variables----------------------
 void setup(void);                               // Función de setup
@@ -57,7 +60,7 @@ int  tabla_p(int a);                            // Tabla que traduce valores a d
 void __interrupt() isr(void){
     if(PIR1bits.ADIF){
         if(ADCON0bits.CHS == 1){                // Si el channel es 1 (puerto AN1)
-            CCPR2L = (ADRESH>>1)+118;           // ADRESH = CCPR2L (duty cycle de 118 a 255)
+            CCPR2L = (ADRESH>>1)+124;           // ADRESH = CCPR2L (duty cycle de 118 a 255)
             CCP2CONbits.DC2B1 = ADRESH & 0b01;  
             CCP2CONbits.DC2B0 = (ADRESL>>7);
             
@@ -74,12 +77,13 @@ void __interrupt() isr(void){
     }
     if(T0IF){
         tmr0();                                 // Reiniciar TMR0
-        cont++;                                 // Aumentar contador en cada interrupción de timer 0
-        if(cont == 2){
-            PORTCbits.RC3 = 1;                  // Si cont >= valor traducido de potenciómetro, entonces RC3 = 0
+        if(PORTCbits.RC3 == 1){
+           valor_tmr0 = 14;
+           PORTCbits.RC3 = 0;
         }
-        else {
-            PORTCbits.RC3 = 0;                  // PORTC, bit 3 = 1
+        else{
+            valor_tmr0 = (255-14);
+            PORTCbits.RC3 = 1;
         }
     }
 }
@@ -104,7 +108,8 @@ void main(void) {
             }
             __delay_us(50);
             ADCON0bits.GO = 1;                  // Asignar bit GO = 1
-        } 
+        }
+        
     }
 }
 
@@ -125,7 +130,7 @@ void setup(void){
     PORTE = 0;                                  // Limpiar PORTE
     
     //Configuración de oscilador
-    OSCCONbits.IRCF = 0b0111;                   // Oscilador a 8 MHz = 111
+    OSCCONbits.IRCF = 0b0110;                   // Oscilador a 8 MHz = 111
     OSCCONbits.SCS = 1;
     
     //Configuración de TMR0
@@ -133,8 +138,8 @@ void setup(void){
     OPTION_REGbits.T0SE = 0;                    // bit 4 TMR0 Source Edge Select bit 0 = low/high 1 = high/low
     OPTION_REGbits.PSA = 0;                     // bit 3  Prescaler Assignment bit...0 = Prescaler is assigned to the WDT
     OPTION_REGbits.PS2 = 1;                     // bits 2-0  PS2:PS0: Prescaler Rate Select bits
-    OPTION_REGbits.PS1 = 1;
-    OPTION_REGbits.PS0 = 0;
+    OPTION_REGbits.PS1 = 0;
+    OPTION_REGbits.PS0 = 1;
     TMR0 = valor_tmr0;                          // preset for timer register
     
     //Configuración del ADC
@@ -189,4 +194,6 @@ void tmr0(void){
     TMR0 = valor_tmr0;                          // TMR0 = 255
     return;
 }
+
+
 

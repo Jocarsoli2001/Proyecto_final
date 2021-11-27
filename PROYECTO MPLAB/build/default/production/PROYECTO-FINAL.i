@@ -2747,6 +2747,9 @@ extern int printf(const char *, ...);
 # 43 "PROYECTO-FINAL.c"
 char cont = 0;
 int limite = 0;
+int valor_tmr0 = 0;
+
+
 
 
 void setup(void);
@@ -2762,7 +2765,7 @@ int tabla_p(int a);
 void __attribute__((picinterrupt(("")))) isr(void){
     if(PIR1bits.ADIF){
         if(ADCON0bits.CHS == 1){
-            CCPR2L = (ADRESH>>1)+118;
+            CCPR2L = (ADRESH>>1)+124;
             CCP2CONbits.DC2B1 = ADRESH & 0b01;
             CCP2CONbits.DC2B0 = (ADRESL>>7);
 
@@ -2779,12 +2782,13 @@ void __attribute__((picinterrupt(("")))) isr(void){
     }
     if(T0IF){
         tmr0();
-        cont++;
-        if(cont == 2){
-            PORTCbits.RC3 = 1;
+        if(PORTCbits.RC3 == 1){
+           valor_tmr0 = 14;
+           PORTCbits.RC3 = 0;
         }
-        else {
-            PORTCbits.RC3 = 0;
+        else{
+            valor_tmr0 = (255-14);
+            PORTCbits.RC3 = 1;
         }
     }
 }
@@ -2797,19 +2801,20 @@ void main(void) {
         if(ADCON0bits.GO == 0){
             if(ADCON0bits.CHS == 2){
                 ADCON0bits.CHS = 1;
-                _delay((unsigned long)((50)*(8000000/4000000.0)));
+                _delay((unsigned long)((50)*(4000000/4000000.0)));
             }
             else if (ADCON0bits.CHS == 1){
                 ADCON0bits.CHS = 0;
-                _delay((unsigned long)((50)*(8000000/4000000.0)));
+                _delay((unsigned long)((50)*(4000000/4000000.0)));
             }
             else {
                 ADCON0bits.CHS = 2;
-                _delay((unsigned long)((50)*(8000000/4000000.0)));
+                _delay((unsigned long)((50)*(4000000/4000000.0)));
             }
-            _delay((unsigned long)((50)*(8000000/4000000.0)));
+            _delay((unsigned long)((50)*(4000000/4000000.0)));
             ADCON0bits.GO = 1;
         }
+
     }
 }
 
@@ -2830,7 +2835,7 @@ void setup(void){
     PORTE = 0;
 
 
-    OSCCONbits.IRCF = 0b0111;
+    OSCCONbits.IRCF = 0b0110;
     OSCCONbits.SCS = 1;
 
 
@@ -2838,9 +2843,9 @@ void setup(void){
     OPTION_REGbits.T0SE = 0;
     OPTION_REGbits.PSA = 0;
     OPTION_REGbits.PS2 = 1;
-    OPTION_REGbits.PS1 = 1;
-    OPTION_REGbits.PS0 = 0;
-    TMR0 = 240;
+    OPTION_REGbits.PS1 = 0;
+    OPTION_REGbits.PS0 = 1;
+    TMR0 = valor_tmr0;
 
 
     ADCON1bits.ADFM = 0;
@@ -2850,7 +2855,7 @@ void setup(void){
     ADCON0bits.ADCS = 0b10;
     ADCON0bits.CHS = 0;
     ADCON0bits.ADON = 1;
-    _delay((unsigned long)((200)*(8000000/4000000.0)));
+    _delay((unsigned long)((200)*(4000000/4000000.0)));
 
 
     INTCONbits.T0IF = 0;
@@ -2891,6 +2896,6 @@ void setup(void){
 
 void tmr0(void){
     INTCONbits.T0IF = 0;
-    TMR0 = 240;
+    TMR0 = valor_tmr0;
     return;
 }
