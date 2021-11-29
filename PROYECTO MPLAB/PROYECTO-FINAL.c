@@ -40,8 +40,6 @@
 //-----------------------Constantes----------------------------------
 
 //#define  valor_tmr0 248                         // valor_tmr0 = 156 (0.05 ms)
-#define dir1EEPROM 0x04;
-#define dir2EEPROM 0x08;
 
 //-----------------------Variables------------------------------------
 
@@ -180,17 +178,22 @@ void __interrupt() isr(void){
         PIR1bits.RCIF = 0;
         
         // SI:
-        // - Se detecta un comando de servo
+        // - Se detecta un comando de servo ("S")
         // - No hay errores de framing
         // - No hay errores de overrun
-        if (serial_in == 'S' && RCSTAbits.FERR == 0 && RCSTAbits.OERR == 0) {
+        //if (serial_in == 'S' && RCSTAbits.FERR == 0 && RCSTAbits.OERR == 0) {
+        if (serial_in == 'S') {
             
+            // Se lee el número luego de la "S"
+            // (Se convierte a número al restarle el valor de '0' en ASCII)
             servoNo = readSerialInput() - '0';
             
+            // Leer: Primer dígito de número
             serial_in = readSerialInput();
             
             while (serial_in != 'e'){
                 
+                // Leer: Todos los dígitos del número
                 switch (nums_recibidos){
                     case 0:
                         aio_servoPos += serial_in - '0';
@@ -203,8 +206,10 @@ void __interrupt() isr(void){
                         break;
                 }
                 
+                // Se cuenta cada dígito recibido
                 nums_recibidos ++;
                 
+                // Si se reciben más de tres dígitos o una "e", se finaliza la lectura
                 if (nums_recibidos > 2){
                     serial_in = 'e';
                 }
@@ -213,10 +218,13 @@ void __interrupt() isr(void){
                 }
             }
             
+            // Se envía a transformar en el MAIN_LOOP la posición obtenida de Adafruit
+            // Se resetea el número de dígitos recibidos
             servoCCP_in = aio_servoPos;
             nums_recibidos = 0;
         }
         
+        // Se limpia la flag de recepción
         PIR1bits.RCIF = 0;
   
     }
@@ -263,8 +271,6 @@ void main(void) {
             // MODO CONTROL: ADAFRUIT
             // ==============================
             case 1:
-                PIR1bits.ADIF = 0;                          // Limpiar bandera de interrupción del ADC
-                PIE1bits.ADIE = 0;                          // Interrupción ADC = enabled
                 
                 // Se mapea el valor para los servos
                 map2CCPServoRange();
@@ -318,7 +324,7 @@ void setup(void){
     IOCBbits.IOCB2 = 1;
     
     // Configuración de oscilador
-    OSCCONbits.IRCF = 0b0110;                   // Oscilador a 8 MHz = 111
+    OSCCONbits.IRCF = 0b0110;                   // Oscilador a 4 MHz = 111
     OSCCONbits.SCS = 1;
     
     // Configuración de UART
@@ -376,7 +382,7 @@ void setup(void){
     CCP2CONbits.CCP2M = 0b1100;                 // Modo de PWM para CCP2
     
     //CCPR1H = 0;
-    CCPR1L = 150;                              // Duty cicle inicial del PWM en CCP1 y CCP2
+    CCPR1L = 150;                               // Duty cicle inicial del PWM en CCP1 y CCP2
     CCPR2L = 150;
     CCP2CONbits.DC2B0 = 0;                      // Bits menos significativos de CCP2
     CCP2CONbits.DC2B1 = 0;
@@ -421,7 +427,7 @@ void map2TMR0ServoRange(void){
     // Output Range: 7 - 37
     // Input Range: 0 - 255
     // Formula: output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
-    servoTMR0_map = 0 + ((37.0 - 0) / 255) * (servoTMR0_in);
+    servoTMR0_map = 7 + (0.1451) * (servoTMR0_in);
     
     return;
 }
@@ -431,7 +437,7 @@ void map2CCPServoRange(void){
     // Output Range: 35 - 150
     // Input Range: 0 - 255
     // Formula: output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
-    servoCCP_map = 35.0 + (0.45098) * (servoCCP_in);
+    servoCCP_map = 35 + (0.45098) * (servoCCP_in);
     
     return;
 }
