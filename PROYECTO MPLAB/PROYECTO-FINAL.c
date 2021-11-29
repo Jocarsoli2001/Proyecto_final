@@ -40,6 +40,8 @@
 //-----------------------Constantes----------------------------------
 
 //#define  valor_tmr0 248                         // valor_tmr0 = 156 (0.05 ms)
+#define dir1EEPROM 0x04;
+#define dir2EEPROM 0x08;
 
 //-----------------------Variables------------------------------------
 
@@ -51,12 +53,10 @@ int valor_tmr0 = 0;
 // Variables de ADC para CCP
 int servoCCP_in = 0;
 float servoCCP_map = 0;
+int servoCCP1_pos = 35, servoCCP2_pos = 35;         // Se inicializan en 35 para evitar problemas post mapeo
 
 // Variables de UART
 char serial_in = 0;
-char serial_prev = 0;
-
-char servoP1 = 'F', servoP2 = 'F', servoP3 = 'F', servoP4 = 'F', servoP5 = 'F'; 
 int servoNo = 99;
 int nums_recibidos = 0;
 int aio_servoPos = 0;
@@ -75,31 +75,73 @@ void tmr0(void);                                // Función para reiniciar TMR0
 void map2TMR0ServoRange(void);                  // Función para mapear de un rango de 0-255 a 7-37
 void map2CCPServoRange(void);                   // Función para mapear de un rango de 0-255 a 35-150
 char readSerialInput(void);
+void updateStatusLEDS(void);
+
+uint8_t readFromEEPROM(uint8_t address);
+void writeToEEPROM(uint8_t data, uint8_t address);
 
 //----------------------Interrupciones--------------------------------
 void __interrupt() isr(void){
     
     // ====================
+    // PORTB INTERRUPT
+    // ====================
+    
+    if (INTCONbits.RBIF == 1){
+        
+        // Selección de modo con botones
+        if (PORTBbits.RB5 == 1 && PORTBbits.RB4 == 0 && PORTBbits.RB3 == 0){
+            modo_control_servo = 2;
+            CCPR1L = readFromEEPROM(0x04);
+            CCPR2L = readFromEEPROM(0x08);
+        }
+        else if (PORTBbits.RB5 == 0 && PORTBbits.RB4 == 1 && PORTBbits.RB3 == 0){
+            modo_control_servo = 1;
+        }
+        else if (PORTBbits.RB5 == 0 && PORTBbits.RB4 == 0 && PORTBbits.RB3 == 1){
+            modo_control_servo = 0;
+        }
+        
+        // Guardar posiciones en modo manual
+        if (PORTBbits.RB2 == 1 && modo_control_servo == 0){
+            writeToEEPROM(servoCCP1_pos, 0x04);
+            writeToEEPROM(servoCCP2_pos, 0x08);
+        }
+        
+        // Se actualizan las LEDS de status
+        updateStatusLEDS();
+        
+        // Se debe limpiar en software la bandera de interrupción
+        INTCONbits.RBIF = 0;
+    }
+    
+    // ====================
     // ADC INTERRUPT
     // ====================
-    if(PIR1bits.ADIF){
+    if(PIR1bits.ADIF && modo_control_servo == 0){
         if(ADCON0bits.CHS == 1){                    // Si el channel es 1 (puerto AN1)
             
             servoCCP_in = ADRESH;
-            //map2CCPServoRange();
-            //CCPR2L = (int) servoCCP_map;
+            map2CCPServoRange();
+            CCPR2L = (int) servoCCP_map;
             
-            //CCP2CONbits.DC2B1 = ADRESH & 0b01;  
-            //CCP2CONbits.DC2B0 = (ADRESL>>7);
+            // Se almacena el mapeo en una variable específica al servo
+            servoCCP1_pos = (int) servoCCP_map;
+            
+            CCP2CONbits.DC2B1 = ADRESH & 0b01;  
+            CCP2CONbits.DC2B0 = (ADRESL>>7);
             
         }
         else if (ADCON0bits.CHS == 0){              // Si input channel = 0 (puerto AN0)
             servoCCP_in = ADRESH;
-            //map2CCPServoRange();
-            //CCPR1L = (int) servoCCP_map;
+            map2CCPServoRange();
+            CCPR1L = (int) servoCCP_map;
             
-            //CCP1CONbits.DC1B1 = ADRESH & 0b01;  
-            //CCP1CONbits.DC1B0 = (ADRESL>>7);
+            // Se almacena el mapeo en una variable específica al servo
+            servoCCP2_pos = (int) servoCCP_map;
+            
+            CCP1CONbits.DC1B1 = ADRESH & 0b01;  
+            CCP1CONbits.DC1B0 = (ADRESL>>7);
         } 
         else if (ADCON0bits.CHS == 2){
             servoTMR0_in = ADRESH;                        // Lee el ADC
@@ -129,7 +171,7 @@ void __interrupt() isr(void){
     // ====================
     // EUSART INTERRUPT
     // ====================
-    if(PIR1bits.RCIF){
+    if(PIR1bits.RCIF && modo_control_servo == 1){
         
         aio_servoPos = 0;
         servoNo = 99;
@@ -151,15 +193,12 @@ void __interrupt() isr(void){
                 
                 switch (nums_recibidos){
                     case 0:
-                        servoP2 = serial_in;
                         aio_servoPos += serial_in - '0';
                         break;
                     case 1:
-                        servoP3 = serial_in;
                         aio_servoPos += (serial_in - '0') * 10;
                         break;
                     case 2:
-                        servoP4 = serial_in;
                         aio_servoPos += (serial_in - '0') * 100;
                         break;
                 }
@@ -185,37 +224,33 @@ void __interrupt() isr(void){
 
 //----------------------Main Loop--------------------------------
 void main(void) {
+    
     setup();                                    // Subrutina de setup
     ADCON0bits.GO = 1;                          // Comenzar conversión ADC 
+    
     while(1){
         
+        // Rutinas a ejecutar según modo
         switch (modo_control_servo){
             
+            // ==============================
             // MODO CONTROL: POTENCIÓMETROS
+            // ==============================
             case 0:
+                // Interrupciones
+                PIE1bits.ADIE = 1;                              // Interrupción ADC = enabled
+                
                 if(ADCON0bits.GO == 0){                         // Si bit GO = 0
                     if(ADCON0bits.CHS == 0){                    // Si Input Channel = AN1
-                        
-                        servoCCP_in = ADRESH;
-                        map2CCPServoRange();
-                        CCPR1L = (int) servoCCP_map;
-                        CCP1CONbits.DC1B1 = ADRESH & 0b01;  
-                        CCP1CONbits.DC1B0 = (ADRESL>>7);
-                        
                         ADCON0bits.CHS = 1;                     // Asignar input Channel = AN0
                         __delay_us(50);                         // Delay de 50 us
                     }
                     else if (ADCON0bits.CHS == 1){              // Si Input Channel = AN0
-                        map2CCPServoRange();
-                        CCPR2L = (int) servoCCP_map;
-                        CCP2CONbits.DC2B1 = ADRESH & 0b01;  
-                        CCP2CONbits.DC2B0 = (ADRESL>>7);
-                        
                         ADCON0bits.CHS = 2;                     // Asignar Input Channel = AN1
                         __delay_us(50);                         // Delay de 50 us
                     }
                     else if (ADCON0bits.CHS == 2){
-                        ADCON0bits.CHS = 3;
+                        ADCON0bits.CHS = 0;
                         __delay_us(50);
                     }
                     
@@ -224,9 +259,10 @@ void main(void) {
                 }
                 break;
             
+            // ==============================
             // MODO CONTROL: ADAFRUIT
+            // ==============================
             case 1:
-                
                 PIR1bits.ADIF = 0;                          // Limpiar bandera de interrupción del ADC
                 PIE1bits.ADIE = 0;                          // Interrupción ADC = enabled
                 
@@ -244,7 +280,13 @@ void main(void) {
                     CCP2CONbits.DC2B0 = 0;
                 }
                 break;
-             
+            
+            // ==============================
+            // MODO CONTROL: EEPROM
+            // ==============================
+            case 2:
+                NOP();
+                
         }
         
     }
@@ -259,7 +301,7 @@ void setup(void){
     
     TRISA = 0b00000111;                         // PORTA, bit 0 y 1 como entrada analógica
     TRISC = 0;                                  // PORTC como salida
-    TRISB = 0;                                  // PORTB como salida
+    TRISB = 0b00111100;                         // PORTB, bit 7-6 OUT, bit 5-2 IN, bit 1-0 OUT
     TRISD = 0;                                  // PORTD como salida                           
     TRISE = 0;                                  // PORTE como salida
     
@@ -267,6 +309,13 @@ void setup(void){
     PORTB = 0;                                  // Limpiar PORTB
     PORTC = 0;                                  // Limpiar PORTC
     PORTE = 0;                                  // Limpiar PORTE
+    
+    // Interrupt on-change de PORT B
+    IOCB = 0;
+    IOCBbits.IOCB5 = 1;
+    IOCBbits.IOCB4 = 1;
+    IOCBbits.IOCB3 = 1;
+    IOCBbits.IOCB2 = 1;
     
     // Configuración de oscilador
     OSCCONbits.IRCF = 0b0110;                   // Oscilador a 8 MHz = 111
@@ -350,6 +399,13 @@ void setup(void){
     TRISCbits.TRISC2 = 0;                       // Salida 1 del PWM en RC2
     TRISCbits.TRISC1 = 0;                       // Salida 2 del PWM en RC1
     
+    // Actualización de LEDS de Status
+    updateStatusLEDS();
+    
+    // Se colocan dos posiciones iniciales en la EEPROM
+    writeToEEPROM(servoCCP1_pos, 0x04);
+    writeToEEPROM(servoCCP2_pos, 0x08);
+    
     return;
 }
 
@@ -375,7 +431,7 @@ void map2CCPServoRange(void){
     // Output Range: 35 - 150
     // Input Range: 0 - 255
     // Formula: output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
-    servoCCP_map = 35.0 + ((150.0 - 35.0) / 255) * (servoCCP_in);
+    servoCCP_map = 35.0 + (0.45098) * (servoCCP_in);
     
     return;
 }
@@ -397,4 +453,55 @@ char readSerialInput(void){
     PIR1bits.RCIF = 0;
     return(serial_input);
     
+}
+
+void updateStatusLEDS(void){
+    
+    if (modo_control_servo == 2){
+        PORTCbits.RC5 = 1;
+        PORTCbits.RC4 = 0;
+        PORTDbits.RD3 = 0;
+    }
+    else if (modo_control_servo == 1){
+        PORTCbits.RC5 = 0;
+        PORTCbits.RC4 = 1;
+        PORTDbits.RD3 = 0;
+    }
+    else if (modo_control_servo == 0){
+        PORTCbits.RC5 = 0;
+        PORTCbits.RC4 = 0;
+        PORTDbits.RD3 = 1;
+    }
+    
+    return;
+}
+
+uint8_t readFromEEPROM(uint8_t address){
+    EEADR = address;                        // Dirección a leer
+    EECON1bits.EEPGD = 0;                   // Memoria de datos
+    EECON1bits.RD = 1;                      // Hace una lectura
+    uint8_t data = EEDAT;                   // Guarda el dato leído de la EEPROM
+    return data;
+}
+
+// writeToEEPROM(variable, dir1EEPROM)
+void writeToEEPROM(uint8_t data, uint8_t address){
+    EEADR = address;
+    EEDAT = data;
+    
+    EECON1bits.EEPGD = 0;                   // Escribir a memoria de datos
+    EECON1bits.WREN = 1;                    // Habilitar escritura a EEPROM (datos)
+    
+    INTCONbits.GIE = 0;                     // Deshabilitar interrupciones
+    EECON2 = 0x55;                          // Secuencia obligatoria
+    EECON2 = 0xAA;                          
+    EECON1bits.WR = 1;                      // Escribir / Write
+    
+    while (PIR2bits.EEIF == 0);
+    PIR2bits.EEIF = 0;
+    
+    INTCONbits.GIE = 1;                     // Habilitar interrupciones
+    EECON1bits.WREN = 0;                    // Deshabilitar escritura de EEPROM
+    
+    return;
 }
