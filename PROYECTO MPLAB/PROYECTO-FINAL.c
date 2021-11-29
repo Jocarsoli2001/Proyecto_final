@@ -32,50 +32,49 @@
 #include <xc.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 //-----------------Definición de frecuencia de cristal---------------
 #define _XTAL_FREQ 4000000
 
 //-----------------------Constantes----------------------------------
+
 //#define  valor_tmr0 248                         // valor_tmr0 = 156 (0.05 ms)
 
 //-----------------------Variables------------------------------------
-char cont = 0;
-int limite = 0;
+
+// Variables de ADC para TMR0
+int servoTMR0_in = 0;
+float servoTMR0_map = 0;
 int valor_tmr0 = 0;
-int tmr0_pos = 7;
-int limite_transf = 0;
 
-int ADC_in = 0;
-int ADC_map = 0;
+// Variables de ADC para CCP
+int servoCCP_in = 0;
+float servoCCP_map = 0;
 
-// Posiciones de Servo (Con TMR0)
-// Limite mín Teórico = 14 / Experimental = 7
-// Límite max Teórico = 32 / Experimental = 37
-int tmr0_pos_min = 7;
-int tmr0_pos_max = 37;
+// Variables de UART
+char serial_in = 0;
+char serial_prev = 0;
 
-// Posiciones de Servo (Con CCP)
-// Limite mín Teórico = 50 / Experimental = 35
-// Límite max Teórico = 100 / Experimental = 150
-int ccp_pos_min = 35;
-int ccp_pos_max = 150;
+char servoP1 = 'F', servoP2 = 'F', servoP3 = 'F', servoP4 = 'F', servoP5 = 'F'; 
+int servoNo = 99;
+int nums_recibidos = 0;
+int aio_servoPos = 0;
 
-// Settings de Filtro
-int no_muestras_max = 64;          // No. de muestras a promediar
-int muestras = 0;                   // Contador del número de muestras acumuladas
-int limite_filter = 0;              // Valor final resultante del filtrado
-int limite_acum = 0;                // Suma de todas las muestras (muestras acumuladas)
+// Modo de control de servo
+// 0: Manual
+// 1: Adafruit
+// 2: EEPROM
+int modo_control_servo = 1;
 
 //------------Funciones sin retorno de variables----------------------
 void setup(void);                               // Función de setup
-void divisor(void);                             // Función para dividir números en dígitos
 void tmr0(void);                                // Función para reiniciar TMR0
-void displays(void);                            // Función para alternar valores mostrados en displays
 
 // Mapeo de valores
 void map2TMR0ServoRange(void);                  // Función para mapear de un rango de 0-255 a 7-37
 void map2CCPServoRange(void);                   // Función para mapear de un rango de 0-255 a 35-150
+char readSerialInput(void);
 
 //----------------------Interrupciones--------------------------------
 void __interrupt() isr(void){
@@ -85,44 +84,26 @@ void __interrupt() isr(void){
     // ====================
     if(PIR1bits.ADIF){
         if(ADCON0bits.CHS == 1){                    // Si el channel es 1 (puerto AN1)
-            ADC_in = ADRESH;
-            map2CCPServoRange();
-            CCPR2L = ADC_map;
             
-            //CCPR2L = (ADRESH>>1)+124;             // ADRESH = CCPR2L (duty cycle de 118 a 255)
-            CCP2CONbits.DC2B1 = ADRESH & 0b01;  
-            CCP2CONbits.DC2B0 = (ADRESL>>7);
+            servoCCP_in = ADRESH;
+            //map2CCPServoRange();
+            //CCPR2L = (int) servoCCP_map;
+            
+            //CCP2CONbits.DC2B1 = ADRESH & 0b01;  
+            //CCP2CONbits.DC2B0 = (ADRESL>>7);
             
         }
         else if (ADCON0bits.CHS == 0){              // Si input channel = 0 (puerto AN0)
-            ADC_in = ADRESH;
-            map2CCPServoRange();
-            CCPR1L = ADC_map;
+            servoCCP_in = ADRESH;
+            //map2CCPServoRange();
+            //CCPR1L = (int) servoCCP_map;
             
-            //CCPR1L = (ADRESH>>1)+124;             // ADRESH = CCPR1L (duty cycle de 131 a 255)
-            CCP1CONbits.DC1B1 = ADRESH & 0b01;  
-            CCP1CONbits.DC1B0 = (ADRESL>>7);
+            //CCP1CONbits.DC1B1 = ADRESH & 0b01;  
+            //CCP1CONbits.DC1B0 = (ADRESL>>7);
         } 
         else if (ADCON0bits.CHS == 2){
-            limite = ADRESH;                        // Lee el ADC
-            
-            // Output Range: (7, 37)
-            // Input Range: (0, 255)
-            map2TMR0ServoRange();                       // Mapea del rango del ADC al del Servo
-            
-            // Toma de muestras
-            if (muestras < no_muestras_max){
-                limite_acum = limite_acum + limite_transf;
-                muestras ++;
-            }
-            // Cálculo de promedio de muestras
-            else {
-                // Promedia las muestras y resetea las variables asociadas
-                limite_filter = limite_acum / no_muestras_max;
-                limite_acum = 0;
-                muestras = 0;
-            }
-            
+            servoTMR0_in = ADRESH;                        // Lee el ADC
+            map2TMR0ServoRange();                   // Mapea del rango del ADC al del Servo
             
         }
         PIR1bits.ADIF = 0;                      // Limpiar bander de interrupción ADC
@@ -134,15 +115,71 @@ void __interrupt() isr(void){
     if(T0IF){
         
         if(PORTCbits.RC3 == 1){
-           valor_tmr0 = limite_filter;
+           valor_tmr0 = (int) servoTMR0_map;
            PORTCbits.RC3 = 0;
         }
         else{
-            valor_tmr0 = (255 - limite_filter);
+            valor_tmr0 = (255 - (int) servoTMR0_map);
             PORTCbits.RC3 = 1;
         }
         
         tmr0();                                 // Reiniciar TMR0
+    }
+    
+    // ====================
+    // EUSART INTERRUPT
+    // ====================
+    if(PIR1bits.RCIF){
+        
+        aio_servoPos = 0;
+        servoNo = 99;
+        
+        serial_in = RCREG;
+        PIR1bits.RCIF = 0;
+        
+        // SI:
+        // - Se detecta un comando de servo
+        // - No hay errores de framing
+        // - No hay errores de overrun
+        if (serial_in == 'S' && RCSTAbits.FERR == 0 && RCSTAbits.OERR == 0) {
+            
+            servoNo = readSerialInput() - '0';
+            
+            serial_in = readSerialInput();
+            
+            while (serial_in != 'e'){
+                
+                switch (nums_recibidos){
+                    case 0:
+                        servoP2 = serial_in;
+                        aio_servoPos += serial_in - '0';
+                        break;
+                    case 1:
+                        servoP3 = serial_in;
+                        aio_servoPos += (serial_in - '0') * 10;
+                        break;
+                    case 2:
+                        servoP4 = serial_in;
+                        aio_servoPos += (serial_in - '0') * 100;
+                        break;
+                }
+                
+                nums_recibidos ++;
+                
+                if (nums_recibidos > 2){
+                    serial_in = 'e';
+                }
+                else {
+                    serial_in = readSerialInput();  
+                }
+            }
+            
+            servoCCP_in = aio_servoPos;
+            nums_recibidos = 0;
+        }
+        
+        PIR1bits.RCIF = 0;
+  
     }
 }
 
@@ -151,21 +188,63 @@ void main(void) {
     setup();                                    // Subrutina de setup
     ADCON0bits.GO = 1;                          // Comenzar conversión ADC 
     while(1){
-        if(ADCON0bits.GO == 0){                 // Si bit GO = 0
-            if(ADCON0bits.CHS == 2){            // Si Input Channel = AN1
-                ADCON0bits.CHS = 1;             // Asignar input Channel = AN0
-                __delay_us(50);                 // Delay de 50 us
-            }
-            else if (ADCON0bits.CHS == 1){      // Si Input Channel = AN0
-                ADCON0bits.CHS = 0;             // Asignar Input Channel = AN1
-                __delay_us(50);                 // Delay de 50 us
-            }
-            else {
-                ADCON0bits.CHS = 2;
-                __delay_us(50);
-            }
-            __delay_us(50);
-            ADCON0bits.GO = 1;                  // Asignar bit GO = 1
+        
+        switch (modo_control_servo){
+            
+            // MODO CONTROL: POTENCIÓMETROS
+            case 0:
+                if(ADCON0bits.GO == 0){                         // Si bit GO = 0
+                    if(ADCON0bits.CHS == 0){                    // Si Input Channel = AN1
+                        
+                        servoCCP_in = ADRESH;
+                        map2CCPServoRange();
+                        CCPR1L = (int) servoCCP_map;
+                        CCP1CONbits.DC1B1 = ADRESH & 0b01;  
+                        CCP1CONbits.DC1B0 = (ADRESL>>7);
+                        
+                        ADCON0bits.CHS = 1;                     // Asignar input Channel = AN0
+                        __delay_us(50);                         // Delay de 50 us
+                    }
+                    else if (ADCON0bits.CHS == 1){              // Si Input Channel = AN0
+                        map2CCPServoRange();
+                        CCPR2L = (int) servoCCP_map;
+                        CCP2CONbits.DC2B1 = ADRESH & 0b01;  
+                        CCP2CONbits.DC2B0 = (ADRESL>>7);
+                        
+                        ADCON0bits.CHS = 2;                     // Asignar Input Channel = AN1
+                        __delay_us(50);                         // Delay de 50 us
+                    }
+                    else if (ADCON0bits.CHS == 2){
+                        ADCON0bits.CHS = 3;
+                        __delay_us(50);
+                    }
+                    
+                    __delay_us(50);
+                    ADCON0bits.GO = 1;                      // Asignar bit GO = 1
+                }
+                break;
+            
+            // MODO CONTROL: ADAFRUIT
+            case 1:
+                
+                PIR1bits.ADIF = 0;                          // Limpiar bandera de interrupción del ADC
+                PIE1bits.ADIE = 0;                          // Interrupción ADC = enabled
+                
+                // Se mapea el valor para los servos
+                map2CCPServoRange();
+                
+                if (servoNo == 1){
+                    CCPR1L = (int) servoCCP_map;
+                    CCP1CONbits.DC1B1 = aio_servoPos & 0b01;  
+                    CCP1CONbits.DC1B0 = 0;  
+                }
+                else if (servoNo == 2){
+                    CCPR2L = (int) servoCCP_map;
+                    CCP2CONbits.DC2B1 = aio_servoPos & 0b01;  
+                    CCP2CONbits.DC2B0 = 0;
+                }
+                break;
+             
         }
         
     }
@@ -180,18 +259,35 @@ void setup(void){
     
     TRISA = 0b00000111;                         // PORTA, bit 0 y 1 como entrada analógica
     TRISC = 0;                                  // PORTC como salida
+    TRISB = 0;                                  // PORTB como salida
     TRISD = 0;                                  // PORTD como salida                           
     TRISE = 0;                                  // PORTE como salida
     
     PORTD = 0;                                  // Limpiar PORTD
+    PORTB = 0;                                  // Limpiar PORTB
     PORTC = 0;                                  // Limpiar PORTC
     PORTE = 0;                                  // Limpiar PORTE
     
-    //Configuración de oscilador
+    // Configuración de oscilador
     OSCCONbits.IRCF = 0b0110;                   // Oscilador a 8 MHz = 111
     OSCCONbits.SCS = 1;
     
-    //Configuración de TMR0
+    // Configuración de UART
+    TXSTAbits.SYNC = 0;                         // Transmisión asíncrona
+    TXSTAbits.BRGH = 0;                         // Baud rate a velocidad baja
+    BAUDCTLbits.BRG16 = 1;                      // Baud rate de 16 bits
+    
+    SPBRG = 25;                                 // Baudrate de 9600 con reloj de 4MHz. Ver tabla de pág 165 del manual
+    SPBRGH = 0;
+    
+    RCSTAbits.SPEN = 1;                         // Puertos seriales habilitados
+    RCSTAbits.RX9 = 0;                          // Recepción de datos de 8 bits
+    TXSTAbits.TX9 = 0;                          // Envío de datos de 8 bits
+    RCSTAbits.CREN = 1;                         // Recepción continua = ON
+    TXSTAbits.TXEN = 1;                         // Transmisión continua = ON
+    
+    
+    // Configuración de TMR0
     OPTION_REGbits.T0CS = 0;                    // bit 5  TMR0 Clock Source Select bit...0 = Internal Clock (CLKO) 1 = Transition on T0CKI pin
     OPTION_REGbits.T0SE = 0;                    // bit 4 TMR0 Source Edge Select bit 0 = low/high 1 = high/low
     OPTION_REGbits.PSA = 0;                     // bit 3  Prescaler Assignment bit...0 = Prescaler is assigned to Timer0 module
@@ -200,7 +296,7 @@ void setup(void){
     OPTION_REGbits.PS0 = 1;
     TMR0 = valor_tmr0;                          // preset for timer register
     
-    //Configuración del ADC
+    // Configuración del ADC
     ADCON1bits.ADFM = 0;                        // Resultado justificado a la izquierda
     ADCON1bits.VCFG0 = 0;                       // Voltaje 0 de referencia = VSS
     ADCON1bits.VCFG1 = 0;                       // Voltaje 1 de referencia = VDD
@@ -210,13 +306,17 @@ void setup(void){
     ADCON0bits.ADON = 1;                        // ADC = enabled
     __delay_us(200);
     
-    //Configuración de interrupciones
+    // Configuración de interrupciones
     INTCONbits.T0IF = 0;                        // Habilitada la bandera de TIMER 0      
     INTCONbits.T0IE = 1;                        // Habilitar las interrupciones de TIMER 0
     INTCONbits.GIE = 1;                         // Habilitar interrupciones globales
     PIR1bits.ADIF = 0;                          // Limpiar bandera de interrupción del ADC
     PIE1bits.ADIE = 1;                          // Interrupción ADC = enabled
     INTCONbits.PEIE = 1;                        // Interrupciones periféricas activadas
+    
+    PIR1bits.RCIF = 0;                          // Limpiar bandera de interrupción de EUSART
+    PIE1bits.RCIE = 1;                          // Interrupción por recepción por EUSART
+    PIE1bits.TXIE = 0;                          // Interrupción por envío OFF (No muy utilizado)
     
     // Configuración de PWM (CCP)
     // Periodo para servos (Tpwm) = 2 ms
@@ -262,159 +362,39 @@ void tmr0(void){
 
 void map2TMR0ServoRange(void){
     
-    if (limite >= 0 && limite < 9)           { limite_transf = tmr0_pos_min; }
-    else if (limite >= 9 && limite < 17)     { limite_transf = tmr0_pos_min + 1; }
-    else if (limite >= 17 && limite < 25)    { limite_transf = tmr0_pos_min + 2; }
-    else if (limite >= 25 && limite < 34)    { limite_transf = tmr0_pos_min + 3; }
-    else if (limite >= 34 && limite < 42)    { limite_transf = tmr0_pos_min + 4; }
-    else if (limite >= 42 && limite < 51)    { limite_transf = tmr0_pos_min + 5; }
-    else if (limite >= 51 && limite < 59)    { limite_transf = tmr0_pos_min + 6; }
-    else if (limite >= 59 && limite < 68)    { limite_transf = tmr0_pos_min + 7; }
-    else if (limite >= 68 && limite < 76)    { limite_transf = tmr0_pos_min + 8; }
-    else if (limite >= 76 && limite < 85)    { limite_transf = tmr0_pos_min + 9; }
-    else if (limite >= 85 && limite < 93)    { limite_transf = tmr0_pos_min + 10; }
-    else if (limite >= 93 && limite < 102)   { limite_transf = tmr0_pos_min + 11; }
-    else if (limite >= 102 && limite < 110)  { limite_transf = tmr0_pos_min + 12; }
-    else if (limite >= 110 && limite < 119)  { limite_transf = tmr0_pos_min + 13; }
-    else if (limite >= 119 && limite < 127)  { limite_transf = tmr0_pos_min + 14; }
-    else if (limite >= 127 && limite < 136)  { limite_transf = tmr0_pos_min + 15; }
-    else if (limite >= 136 && limite < 144)  { limite_transf = tmr0_pos_min + 16; }
-    else if (limite >= 144 && limite < 153)  { limite_transf = tmr0_pos_min + 17; }
-    else if (limite >= 153 && limite < 161)  { limite_transf = tmr0_pos_min + 18; }
-    else if (limite >= 161 && limite < 170)  { limite_transf = tmr0_pos_min + 19; }
-    else if (limite >= 170 && limite < 178)  { limite_transf = tmr0_pos_min + 20; }
-    else if (limite >= 178 && limite < 187)  { limite_transf = tmr0_pos_min + 21; }
-    else if (limite >= 187 && limite < 195)  { limite_transf = tmr0_pos_min + 22; }
-    else if (limite >= 195 && limite < 204)  { limite_transf = tmr0_pos_min + 23; }
-    else if (limite >= 204 && limite < 212)  { limite_transf = tmr0_pos_min + 24; }
-    else if (limite >= 212 && limite < 221)  { limite_transf = tmr0_pos_min + 25; }
-    else if (limite >= 221 && limite < 229)  { limite_transf = tmr0_pos_min + 26; }
-    else if (limite >= 229 && limite < 238)  { limite_transf = tmr0_pos_min + 27; }
-    else if (limite >= 238 && limite < 246)  { limite_transf = tmr0_pos_min + 28; }
-    else if (limite >= 246 && limite < 255)  { limite_transf = tmr0_pos_min + 29; }
-    else { limite_transf = tmr0_pos_max; }
+    // Output Range: 7 - 37
+    // Input Range: 0 - 255
+    // Formula: output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
+    servoTMR0_map = 0 + ((37.0 - 0) / 255) * (servoTMR0_in);
     
     return;
 }
 
 void map2CCPServoRange(void){
     
-    if (ADC_in >= 0 && ADC_in < 2)         { ADC_map = ccp_pos_min; }
-    else if (ADC_in >= 2 && ADC_in < 4)    { ADC_map = ccp_pos_min + 1; }
-    else if (ADC_in >= 4 && ADC_in < 6)    { ADC_map = ccp_pos_min + 2; }
-    else if (ADC_in >= 6 && ADC_in < 8)    { ADC_map = ccp_pos_min + 3; }
-    else if (ADC_in >= 8 && ADC_in < 11)   { ADC_map = ccp_pos_min + 4; }
-    else if (ADC_in >= 11 && ADC_in < 13)  { ADC_map = ccp_pos_min + 5; }
-    else if (ADC_in >= 13 && ADC_in < 15)  { ADC_map = ccp_pos_min + 6; }
-    else if (ADC_in >= 15 && ADC_in < 17)  { ADC_map = ccp_pos_min + 7; }
-    else if (ADC_in >= 17 && ADC_in < 19)  { ADC_map = ccp_pos_min + 8; }
-    else if (ADC_in >= 19 && ADC_in < 22)  { ADC_map = ccp_pos_min + 9; }
-    else if (ADC_in >= 22 && ADC_in < 24)  { ADC_map = ccp_pos_min + 10; }
-    else if (ADC_in >= 24 && ADC_in < 26)  { ADC_map = ccp_pos_min + 11; }
-    else if (ADC_in >= 26 && ADC_in < 28)  { ADC_map = ccp_pos_min + 12; }
-    else if (ADC_in >= 28 && ADC_in < 31)  { ADC_map = ccp_pos_min + 13; }
-    else if (ADC_in >= 31 && ADC_in < 33)  { ADC_map = ccp_pos_min + 14; }
-    else if (ADC_in >= 33 && ADC_in < 35)  { ADC_map = ccp_pos_min + 15; }
-    else if (ADC_in >= 35 && ADC_in < 37)  { ADC_map = ccp_pos_min + 16; }
-    else if (ADC_in >= 37 && ADC_in < 39)  { ADC_map = ccp_pos_min + 17; }
-    else if (ADC_in >= 39 && ADC_in < 42)  { ADC_map = ccp_pos_min + 18; }
-    else if (ADC_in >= 42 && ADC_in < 44)  { ADC_map = ccp_pos_min + 19; }
-    else if (ADC_in >= 44 && ADC_in < 46)  { ADC_map = ccp_pos_min + 20; }
-    else if (ADC_in >= 46 && ADC_in < 48)  { ADC_map = ccp_pos_min + 21; }
-    else if (ADC_in >= 48 && ADC_in < 51)  { ADC_map = ccp_pos_min + 22; }
-    else if (ADC_in >= 51 && ADC_in < 53)  { ADC_map = ccp_pos_min + 23; }
-    else if (ADC_in >= 53 && ADC_in < 55)  { ADC_map = ccp_pos_min + 24; }
-    else if (ADC_in >= 55 && ADC_in < 57)  { ADC_map = ccp_pos_min + 25; }
-    else if (ADC_in >= 57 && ADC_in < 59)  { ADC_map = ccp_pos_min + 26; }
-    else if (ADC_in >= 59 && ADC_in < 62)  { ADC_map = ccp_pos_min + 27; }
-    else if (ADC_in >= 62 && ADC_in < 64)  { ADC_map = ccp_pos_min + 28; }
-    else if (ADC_in >= 64 && ADC_in < 66)  { ADC_map = ccp_pos_min + 29; }
-    else if (ADC_in >= 66 && ADC_in < 68)  { ADC_map = ccp_pos_min + 30; }
-    else if (ADC_in >= 68 && ADC_in < 70)  { ADC_map = ccp_pos_min + 31; }
-    else if (ADC_in >= 70 && ADC_in < 73)  { ADC_map = ccp_pos_min + 32; }
-    else if (ADC_in >= 73 && ADC_in < 75)  { ADC_map = ccp_pos_min + 33; }
-    else if (ADC_in >= 75 && ADC_in < 77)  { ADC_map = ccp_pos_min + 34; }
-    else if (ADC_in >= 77 && ADC_in < 79)  { ADC_map = ccp_pos_min + 35; }
-    else if (ADC_in >= 79 && ADC_in < 82)  { ADC_map = ccp_pos_min + 36; }
-    else if (ADC_in >= 82 && ADC_in < 84)  { ADC_map = ccp_pos_min + 37; }
-    else if (ADC_in >= 84 && ADC_in < 86)  { ADC_map = ccp_pos_min + 38; }
-    else if (ADC_in >= 86 && ADC_in < 88)  { ADC_map = ccp_pos_min + 39; }
-    else if (ADC_in >= 88 && ADC_in < 90)  { ADC_map = ccp_pos_min + 40; }
-    else if (ADC_in >= 90 && ADC_in < 93)  { ADC_map = ccp_pos_min + 41; }
-    else if (ADC_in >= 93 && ADC_in < 95)  { ADC_map = ccp_pos_min + 42; }
-    else if (ADC_in >= 95 && ADC_in < 97)  { ADC_map = ccp_pos_min + 43; }
-    else if (ADC_in >= 97 && ADC_in < 99)  { ADC_map = ccp_pos_min + 44; }
-    else if (ADC_in >= 99 && ADC_in < 102)   { ADC_map = ccp_pos_min + 45; }
-    else if (ADC_in >= 102 && ADC_in < 104)  { ADC_map = ccp_pos_min + 46; }
-    else if (ADC_in >= 104 && ADC_in < 106)  { ADC_map = ccp_pos_min + 47; }
-    else if (ADC_in >= 106 && ADC_in < 108)  { ADC_map = ccp_pos_min + 48; }
-    else if (ADC_in >= 108 && ADC_in < 110)  { ADC_map = ccp_pos_min + 49; }
-    else if (ADC_in >= 110 && ADC_in < 113)  { ADC_map = ccp_pos_min + 50; }
-    else if (ADC_in >= 113 && ADC_in < 115)  { ADC_map = ccp_pos_min + 51; }
-    else if (ADC_in >= 115 && ADC_in < 117)  { ADC_map = ccp_pos_min + 52; }
-    else if (ADC_in >= 117 && ADC_in < 119)  { ADC_map = ccp_pos_min + 53; }
-    else if (ADC_in >= 119 && ADC_in < 121)  { ADC_map = ccp_pos_min + 54; }
-    else if (ADC_in >= 121 && ADC_in < 124)  { ADC_map = ccp_pos_min + 55; }
-    else if (ADC_in >= 124 && ADC_in < 126)  { ADC_map = ccp_pos_min + 56; }
-    else if (ADC_in >= 126 && ADC_in < 128)  { ADC_map = ccp_pos_min + 57; }
-    else if (ADC_in >= 128 && ADC_in < 130)  { ADC_map = ccp_pos_min + 58; }
-    else if (ADC_in >= 130 && ADC_in < 133)  { ADC_map = ccp_pos_min + 59; }
-    else if (ADC_in >= 133 && ADC_in < 135)  { ADC_map = ccp_pos_min + 60; }
-    else if (ADC_in >= 135 && ADC_in < 137)  { ADC_map = ccp_pos_min + 61; }
-    else if (ADC_in >= 137 && ADC_in < 139)  { ADC_map = ccp_pos_min + 62; }
-    else if (ADC_in >= 139 && ADC_in < 141)  { ADC_map = ccp_pos_min + 63; }
-    else if (ADC_in >= 141 && ADC_in < 144)  { ADC_map = ccp_pos_min + 64; }
-    else if (ADC_in >= 144 && ADC_in < 146)  { ADC_map = ccp_pos_min + 65; }
-    else if (ADC_in >= 146 && ADC_in < 148)  { ADC_map = ccp_pos_min + 66; }
-    else if (ADC_in >= 148 && ADC_in < 150)  { ADC_map = ccp_pos_min + 67; }
-    else if (ADC_in >= 150 && ADC_in < 153)  { ADC_map = ccp_pos_min + 68; }
-    else if (ADC_in >= 153 && ADC_in < 155)  { ADC_map = ccp_pos_min + 69; }
-    else if (ADC_in >= 155 && ADC_in < 157)  { ADC_map = ccp_pos_min + 70; }
-    else if (ADC_in >= 157 && ADC_in < 159)  { ADC_map = ccp_pos_min + 71; }
-    else if (ADC_in >= 159 && ADC_in < 161)  { ADC_map = ccp_pos_min + 72; }
-    else if (ADC_in >= 161 && ADC_in < 164)  { ADC_map = ccp_pos_min + 73; }
-    else if (ADC_in >= 164 && ADC_in < 166)  { ADC_map = ccp_pos_min + 74; }
-    else if (ADC_in >= 166 && ADC_in < 168)  { ADC_map = ccp_pos_min + 75; }
-    else if (ADC_in >= 168 && ADC_in < 170)  { ADC_map = ccp_pos_min + 76; }
-    else if (ADC_in >= 170 && ADC_in < 172)  { ADC_map = ccp_pos_min + 77; }
-    else if (ADC_in >= 172 && ADC_in < 175)  { ADC_map = ccp_pos_min + 78; }
-    else if (ADC_in >= 175 && ADC_in < 177)  { ADC_map = ccp_pos_min + 79; }
-    else if (ADC_in >= 177 && ADC_in < 179)  { ADC_map = ccp_pos_min + 80; }
-    else if (ADC_in >= 179 && ADC_in < 181)  { ADC_map = ccp_pos_min + 81; }
-    else if (ADC_in >= 181 && ADC_in < 184)  { ADC_map = ccp_pos_min + 82; }
-    else if (ADC_in >= 184 && ADC_in < 186)  { ADC_map = ccp_pos_min + 83; }
-    else if (ADC_in >= 186 && ADC_in < 188)  { ADC_map = ccp_pos_min + 84; }
-    else if (ADC_in >= 188 && ADC_in < 190)  { ADC_map = ccp_pos_min + 85; }
-    else if (ADC_in >= 190 && ADC_in < 192)  { ADC_map = ccp_pos_min + 86; }
-    else if (ADC_in >= 192 && ADC_in < 195)  { ADC_map = ccp_pos_min + 87; }
-    else if (ADC_in >= 195 && ADC_in < 197)  { ADC_map = ccp_pos_min + 88; }
-    else if (ADC_in >= 197 && ADC_in < 199)  { ADC_map = ccp_pos_min + 89; }
-    else if (ADC_in >= 199 && ADC_in < 201)  { ADC_map = ccp_pos_min + 90; }
-    else if (ADC_in >= 201 && ADC_in < 204)  { ADC_map = ccp_pos_min + 91; }
-    else if (ADC_in >= 204 && ADC_in < 206)  { ADC_map = ccp_pos_min + 92; }
-    else if (ADC_in >= 206 && ADC_in < 208)  { ADC_map = ccp_pos_min + 93; }
-    else if (ADC_in >= 208 && ADC_in < 210)  { ADC_map = ccp_pos_min + 94; }
-    else if (ADC_in >= 210 && ADC_in < 212)  { ADC_map = ccp_pos_min + 95; }
-    else if (ADC_in >= 212 && ADC_in < 215)  { ADC_map = ccp_pos_min + 96; }
-    else if (ADC_in >= 215 && ADC_in < 217)  { ADC_map = ccp_pos_min + 97; }
-    else if (ADC_in >= 217 && ADC_in < 219)  { ADC_map = ccp_pos_min + 98; }
-    else if (ADC_in >= 219 && ADC_in < 221)  { ADC_map = ccp_pos_min + 99; }
-    else if (ADC_in >= 221 && ADC_in < 223)  { ADC_map = ccp_pos_min + 100; }
-    else if (ADC_in >= 223 && ADC_in < 226)  { ADC_map = ccp_pos_min + 101; }
-    else if (ADC_in >= 226 && ADC_in < 228)  { ADC_map = ccp_pos_min + 102; }
-    else if (ADC_in >= 228 && ADC_in < 230)  { ADC_map = ccp_pos_min + 103; }
-    else if (ADC_in >= 230 && ADC_in < 232)  { ADC_map = ccp_pos_min + 104; }
-    else if (ADC_in >= 232 && ADC_in < 235)  { ADC_map = ccp_pos_min + 105; }
-    else if (ADC_in >= 235 && ADC_in < 237)  { ADC_map = ccp_pos_min + 106; }
-    else if (ADC_in >= 237 && ADC_in < 239)  { ADC_map = ccp_pos_min + 107; }
-    else if (ADC_in >= 239 && ADC_in < 241)  { ADC_map = ccp_pos_min + 108; }
-    else if (ADC_in >= 241 && ADC_in < 243)  { ADC_map = ccp_pos_min + 109; }
-    else if (ADC_in >= 243 && ADC_in < 246)  { ADC_map = ccp_pos_min + 110; }
-    else if (ADC_in >= 246 && ADC_in < 248)  { ADC_map = ccp_pos_min + 111; }
-    else if (ADC_in >= 248 && ADC_in < 250)  { ADC_map = ccp_pos_min + 112; }
-    else if (ADC_in >= 250 && ADC_in < 252)  { ADC_map = ccp_pos_min + 113; }
-    else if (ADC_in >= 252 && ADC_in < 255)  { ADC_map = ccp_pos_min + 114; }
-    else { ADC_map = ccp_pos_max; }
+    // Output Range: 35 - 150
+    // Input Range: 0 - 255
+    // Formula: output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
+    servoCCP_map = 35.0 + ((150.0 - 35.0) / 255) * (servoCCP_in);
     
     return;
+}
+
+char readSerialInput(void){
+    
+    int intentos = 0;
+    int max_intentos = 100;
+    char serial_input = ' ';
+    
+    while (PIR1bits.RCIF != 1){
+        intentos ++;
+        if (intentos > max_intentos){ 
+            break;
+        }
+    }
+    
+    serial_input = RCREG;
+    PIR1bits.RCIF = 0;
+    return(serial_input);
+    
 }
